@@ -2,6 +2,8 @@ import react from 'react';
 import styled from "styled-components";
 import '../css/index.css';
 import Logo from '../css/GAGA2.png';
+import { Route, Link,Switch } from "react-router-dom";
+import Result from './Result';
 
 // #수직정렬
 // display:flex;
@@ -29,8 +31,7 @@ const Box = styled.div`
 const Text = styled.p`
   color: black;
   font-size:2em;
-  margin-top:22%;
-//   background-color:white;
+  margin-top:15%;
   font-family: 'Do Hyeon';
 `
 
@@ -52,15 +53,16 @@ const UploadBtn = styled.button`
 const Main = () => {
     return(
         <Container>
-            <img src={Logo} style={{width:"13%", height:"26%", position:"absolute", margin: "2% 44%"}}></img>
+          <Link to = "/">
+            <img src={Logo} style={{width:"12%", height:"24%", position:"absolute", margin: "1% 45%"}}></img>
+            </Link>
             <Box>
                 <Text>동영상을 업로드하고, 해당 영상의 등장 인물을 구분해보세요!</Text>
             </Box>
-            <Box>
-                {/* <UploadBtn>동영상 선택</UploadBtn> */}
-                <UploadBtn>동영상 업로드하기</UploadBtn>
-            </Box>
-            <input type="file"/> 
+                <Link to="/result"> 
+                <Box><UploadBtn>동영상 업로드하기</UploadBtn></Box>
+                </Link>
+
         </Container>
     )
 }

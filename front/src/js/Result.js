@@ -3,6 +3,7 @@ import styled from "styled-components";
 import '../css/index.css';
 import Logo from '../css/GAGA2.png';
 import ReactPlayer from 'react-player'
+import { Route, Link,Switch } from "react-router-dom";
 
 const Container = styled.div`
   position: absolute;
@@ -10,7 +11,6 @@ const Container = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-//   background-color: #e1f1e7;
   background-size: cover;
 `;
 
@@ -32,12 +32,14 @@ const Text = styled.p`
 const Result= () => {
     return(
         <Container>
-            <img src={Logo} style={{width:"13%", height:"26%", position:"absolute", margin: "2% 44%"}}></img>
+            <Link to = "/">
+            <img src={Logo} style={{width:"12%", height:"24%", position:"absolute", margin: "1% 45%"}}></img>
+            </Link>
             <Box>
                 <Text>동영상 인물 태깅 완료! </Text>
             </Box>
             <Box>
-            <ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' />
+            <ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' height='300px'/>
             </Box> 
         </Container>
     )
