@@ -1,7 +1,12 @@
-# GaGaGaGa : 
-'GaGaGaGa' is ~~~
+# 가가 가가? / GaGaGaGa
+![image](https://user-images.githubusercontent.com/55133538/124889548-29c8f100-e012-11eb-8c12-573201e1e647.png)
+<br>
+가가 가가? / GaGaGaGa 는 2021 SiliconValley Internship에 참여하게 된 Team D의 프로젝트 이름이다. 
+<br>
+타인종효과와 같이 자신과 다르게 생긴 사람들의 얼굴을 잘 구분하지 못해 안면 인식의 불편함을 겪는 사람들에게 도움을 주기 위해 이 프로젝트를 진행하였다.
+<br>
 
-## Team : Kim Ch O I
+## Team D / Kim Ch O I
 Our last name is Kim + Choi + Oh(O) + Lee(I) -> Kim ChOI
 
 <table>
