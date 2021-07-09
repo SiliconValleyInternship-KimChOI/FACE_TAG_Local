@@ -1,9 +1,8 @@
-import react from 'react';
 import styled from "styled-components";
 import '../css/index.css';
 import Logo from '../css/GAGA2.png';
-import { Route, Link,Switch } from "react-router-dom";
-import Result from './Result';
+import {Link} from "react-router-dom";
+import VideoUpload from './VideoUpload';
 
 // #수직정렬
 // display:flex;
@@ -16,7 +15,6 @@ const Container = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-//   background-color: #e1f1e7;
   background-size: cover;
 `;
 
@@ -34,35 +32,25 @@ const Text = styled.p`
   margin-top:15%;
   font-family: 'Do Hyeon';
 `
-
-const UploadBtn = styled.button`
-  width: 30%;
-  height: 50%;
-  margin : 2%;
-  color:white;
-  //color:#97C1A9;
-  font-size: 3em;
-  background-color: black;
-  border: 0px;
-  border-radius: 15px;
-  text-align: center;
-  font-family: 'Do Hyeon';
+const Img = styled.img`
+  width: 12%;
+  height: 24%;
+  position: absolute;
+  margin: 1% 45%;
 `
-
 
 const Main = () => {
     return(
         <Container>
           <Link to = "/">
-            <img src={Logo} style={{width:"12%", height:"24%", position:"absolute", margin: "1% 45%"}}></img>
-            </Link>
-            <Box>
-                <Text>동영상을 업로드하고, 해당 영상의 등장 인물을 구분해보세요!</Text>
-            </Box>
-                <Link to="/result"> 
-                <Box><UploadBtn>동영상 업로드하기</UploadBtn></Box>
-                </Link>
-
+            <Img src={Logo}/>
+          </Link>
+          <Box>
+              <Text>동영상을 업로드하고, 해당 영상의 등장 인물을 구분해보세요!</Text>
+          </Box>
+          <Box>
+            <VideoUpload></VideoUpload>
+          </Box>
         </Container>
     )
 }

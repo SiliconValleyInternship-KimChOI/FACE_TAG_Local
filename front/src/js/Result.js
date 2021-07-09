@@ -1,9 +1,8 @@
-import react from 'react'
 import styled from "styled-components";
 import '../css/index.css';
 import Logo from '../css/GAGA2.png';
+import {Link} from "react-router-dom";
 import ReactPlayer from 'react-player'
-import { Route, Link,Switch } from "react-router-dom";
 
 const Container = styled.div`
   position: absolute;
@@ -28,18 +27,25 @@ const Text = styled.p`
   margin-top:15%;
   font-family: 'Do Hyeon';
 `
+const Img = styled.img`
+  width: 12%;
+  height: 24%;
+  position: absolute;
+  margin: 1% 45%;
+`
 
 const Result= () => {
     return(
         <Container>
             <Link to = "/">
-            <img src={Logo} style={{width:"12%", height:"24%", position:"absolute", margin: "1% 45%"}}></img>
+            <Img src={Logo} alt = "logo" />
             </Link>
             <Box>
                 <Text>동영상 인물 태깅 완료! </Text>
             </Box>
             <Box>
-            <ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' height='300px'/>
+            <ReactPlayer url="https://www.youtube.com/watch?v=-RDb-kSw-Ag&list=PL-FWHmxvuJ58xikmMnl2GQ610zeU0X4tz" 
+            height='300px' controls="true"/>
             </Box> 
         </Container>
     )
