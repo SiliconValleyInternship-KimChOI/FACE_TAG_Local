@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './video'
 CORS(app)
 
-   return render_template('index.html')
+"""@app.route('/', methods=['GET','POST'])
 def get_video():
    video_data = request.get_json()"""
 
