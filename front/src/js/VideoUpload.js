@@ -66,6 +66,7 @@ const Box = styled.div`
 
 function VideoUploadPage() {
     const [uploadedurl, setUploadedurl] = useState(null);
+    const [controlState, setControlState] = useState(false);
     const onDrop = (files) => {
         let formData = new FormData()
         
@@ -75,14 +76,16 @@ function VideoUploadPage() {
         formData.append('file', files[0])
         axios.post('http://localhost:5000/fileUpload', formData, config)
         .then((response) => {
-            setUploadedurl(URL.createObjectURL(files[0]))
+            setUploadedurl(URL.createObjectURL(files[0]));
+            setControlState(true);
+            console.log(formData)
         })
     }
 
     return (
         <div>
             <Form  onSubmit>
-                <ReactPlayer url={uploadedurl} controls="true"></ReactPlayer>
+                <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
                 <div>
                 <Box>
                     <Dropzone
