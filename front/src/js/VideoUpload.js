@@ -100,7 +100,7 @@ function VideoUploadPage() {
                     <Link to="/result"> 
                         <UploadBtn >동영상 업로드</UploadBtn>
                     </Link>
-                </Box> 
+                </Box>
                 </div>
             </Form>
         </div>

@@ -46,7 +46,7 @@ const Result= () => {
             <Box>
             <ReactPlayer url="https://www.youtube.com/watch?v=-RDb-kSw-Ag&list=PL-FWHmxvuJ58xikmMnl2GQ610zeU0X4tz" 
             height='300px' controls="true"/>
-            </Box>
+            </Box> 
         </Container>
     )
 }
