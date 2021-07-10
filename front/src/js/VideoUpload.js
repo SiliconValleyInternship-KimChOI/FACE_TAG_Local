@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import styled from 'styled-components';
-import { Link } from "react-router-dom";
-import ReactPlayer from 'react-player';
-// 깔아야 할 것? 확인해보기!!
-import {Form} from 'antd';
-import Dropzone from 'react-dropzone';
-import axios from 'axios';
+// 모듈 설치
+import {Link} from "react-router-dom";   //react link
+import ReactPlayer from 'react-player';  //react video tag
+import styled from 'styled-components';  //css
+import {Form} from 'antd';               //form
+import Dropzone from 'react-dropzone';   //file upload
+import axios from 'axios';               //post
 
 const SelectBtn = styled.button`
     width: 48%;
@@ -63,32 +63,35 @@ const Box = styled.div`
     justify-content:flex-start;
 `
 
-
-function VideoUploadPage() {
-    const [uploadedurl, setUploadedurl] = useState(null);
-    const [controlState, setControlState] = useState(false);
-    const onDrop = (files) => {
+const VideoUpload = () => {
+    const [uploadedurl, setUploadedurl] = useState(null);  //video url
+    const [controlState, setControlState] = useState(false); //video control
+    const [filename,setFilename] = useState(null); //video file name
+    const onDrop = (files) => {  
         let formData = new FormData()
-        
         const config = {
             header: { 'content-type': 'multipart/form-data'}
         }
+        const tempname = JSON.stringify(files[0],['name'],0);
+        const tempname2 = JSON.parse(tempname).name;
+        setFilename(tempname2);
         formData.append('file', files[0])
         axios.post('http://localhost:5000/fileUpload', formData, config)
         .then((response) => {
             setUploadedurl(URL.createObjectURL(files[0]));
+            console.log(filename);
             setControlState(true);
-            console.log(formData)
-        })
+
+        });
     }
 
     return (
         <div>
+            <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
             <Form  onSubmit>
-                <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
-                <div>
                 <Box>
                     <Dropzone
+                        accept="video/*"
                         onDrop={onDrop}
                         multiple={false}    // 한번에 파일을 2개 이상 올릴건지
                         maxSize={100000000}    // 최대 사이즈 
@@ -96,18 +99,17 @@ function VideoUploadPage() {
                     {({getRootProps, getInputProps}) => (
                         <SelectBtn {...getRootProps()}>
                         파일 선택
-                        <input {...getInputProps()}/>
+                        <input {...getInputProps()} />
                         </SelectBtn >
                     )}
                     </Dropzone>
-                    <Link to="/result"> 
-                        <UploadBtn >동영상 업로드</UploadBtn>
-                    </Link>
+
+                    <div><UploadBtn>동영상 업로드</UploadBtn></div>
+                    {/* <Link to = "/result"><UploadBtn>동영상 업로드</UploadBtn></Link> */}
                 </Box>
-                </div>
             </Form>
         </div>
-    )
+    );
 }
 
-export default VideoUploadPage;
+export default VideoUpload;

@@ -1,5 +1,7 @@
+import React , {useState} from 'react';
 import styled from "styled-components";
 import '../css/index.css';
+import axios from 'axios';
 import Logo from '../css/GAGA2.png';
 import {Link} from "react-router-dom";
 import ReactPlayer from 'react-player'
@@ -35,6 +37,14 @@ const Img = styled.img`
 `
 
 const Result= () => {
+  const [uploadedurl, setUploadedurl] = useState(null);  //video url
+  const [controlState, setControlState] = useState(false); //video control
+
+  // axios.get('http://localhost:5000/fileUpload').then(response=>{
+  //   setUploadedurl(URL.createObjectURL(response.data));
+  //   setControlState(true);
+  // })
+
     return(
         <Container>
             <Link to = "/">
@@ -45,7 +55,7 @@ const Result= () => {
             </Box>
             <Box>
             <ReactPlayer url="https://www.youtube.com/watch?v=-RDb-kSw-Ag&list=PL-FWHmxvuJ58xikmMnl2GQ610zeU0X4tz" 
-            height='300px' controls="true"/>
+            height='300px' controls={controlState}/>
             </Box> 
         </Container>
     )
