@@ -66,11 +66,9 @@ const Box = styled.div`
 const VideoUpload = () => {
     const [uploadedurl, setUploadedurl] = useState(null);  //video url
     const [controlState, setControlState] = useState(false); //video control
-    const [filename,setFilename] = useState(null); //video file name
+    const [name,setName] = useState(null); //video file name
+    const [llink,setLlink] = useState('/');
     const onDrop = (files) => {  
-        const tempname = JSON.stringify(files[0],['name'],0);
-        const tempname2 = JSON.parse(tempname).name;
-        setFilename(tempname2);
         let formData = new FormData()
         const config = {
             header: { 'content-type': 'multipart/form-data'}
@@ -80,13 +78,18 @@ const VideoUpload = () => {
         .then((response) => {
             setUploadedurl(URL.createObjectURL(files[0]));
             setControlState(true);
-            console.log(response.data)
+            console.log(response.data);
+            const tempname = JSON.stringify(response.data,['name'],0);
+            const tempname2 = JSON.parse(tempname).name;
+            setName(tempname2);
+            setLlink('/result');
         });
     }
 
     return (
         <div>
             <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
+            <p>{name}</p>
             <Form  onSubmit>
                 <Box>
                     <Dropzone
@@ -104,7 +107,9 @@ const VideoUpload = () => {
                     </Dropzone>
 
                     {/* <div><UploadBtn>동영상 업로드</UploadBtn></div> */}
-                    <Link to = "/result"><UploadBtn>동영상 업로드</UploadBtn></Link>
+                    <Link to = {{pathname: llink, aboutProps: {name}}}>
+                    <UploadBtn>동영상 업로드</UploadBtn>
+                    </Link>
                 </Box>
             </Form>
         </div>

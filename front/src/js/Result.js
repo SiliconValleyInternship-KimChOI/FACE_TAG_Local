@@ -36,7 +36,10 @@ const Img = styled.img`
   margin: 1% 45%;
 `
 
-const Result= () => {
+const Result= (props) => {
+  const filename = props.location.aboutProps
+  console.log(filename);
+
   const [uploadedurl, setUploadedurl] = useState(null);  //video url
   const [controlState, setControlState] = useState(false); //video control
 

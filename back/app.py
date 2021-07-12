@@ -26,13 +26,14 @@ def get_video():
 		video_file.save('./video')"""
 		return jsonify({'success': True, 'file': 'Received', 'name' : filename})
 
-@app.route('/fileDown', methods = ['GET', 'POST'])
-def throw_file():
-	if request.method == 'POST':
-		return jsonify({"name": "he"})
-        #form에 넣은 후 전달
-        #index = request.form['index']
-        #return send_file('./video',mimetype = 'video/mp4', as_attatchment=True)
+# @app.route('/fileDown', methods = ['POST','GET'])
+# def throw_file():
+# 	if request.method == 'POST':
+# 		file_name = f"Washing_-_34818.mp4"
+#     	return send_file(file_name,
+#                      mimetype='video/mp4',
+#                      attachment_filename='Washing_-_34818.mp4',# 다운받아지는 파일 이름. 
+#                      as_attachment=True)
 
 #서버 실행
 if __name__ == '__main__':
