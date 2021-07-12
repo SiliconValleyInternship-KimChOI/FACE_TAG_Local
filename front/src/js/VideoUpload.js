@@ -68,20 +68,19 @@ const VideoUpload = () => {
     const [controlState, setControlState] = useState(false); //video control
     const [filename,setFilename] = useState(null); //video file name
     const onDrop = (files) => {  
+        const tempname = JSON.stringify(files[0],['name'],0);
+        const tempname2 = JSON.parse(tempname).name;
+        setFilename(tempname2);
         let formData = new FormData()
         const config = {
             header: { 'content-type': 'multipart/form-data'}
         }
-        const tempname = JSON.stringify(files[0],['name'],0);
-        const tempname2 = JSON.parse(tempname).name;
-        setFilename(tempname2);
         formData.append('file', files[0])
         axios.post('http://localhost:5000/fileUpload', formData, config)
         .then((response) => {
             setUploadedurl(URL.createObjectURL(files[0]));
-            console.log(filename);
             setControlState(true);
-
+            console.log(response.data)
         });
     }
 
@@ -104,8 +103,8 @@ const VideoUpload = () => {
                     )}
                     </Dropzone>
 
-                    <div><UploadBtn>동영상 업로드</UploadBtn></div>
-                    {/* <Link to = "/result"><UploadBtn>동영상 업로드</UploadBtn></Link> */}
+                    {/* <div><UploadBtn>동영상 업로드</UploadBtn></div> */}
+                    <Link to = "/result"><UploadBtn>동영상 업로드</UploadBtn></Link>
                 </Box>
             </Form>
         </div>

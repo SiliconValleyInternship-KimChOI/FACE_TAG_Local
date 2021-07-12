@@ -24,21 +24,15 @@ def get_video():
         #저장할 경로 + 파일명
 		"""filename = secure_filename(video_file.filename)
 		video_file.save('./video')"""
-		return jsonify({'success': True, 'file': 'Received'})
+		return jsonify({'success': True, 'file': 'Received', 'name' : filename})
 
-
-"""@app.route('/fileDown', methods = ['GET', 'POST'])
-def down_file():
+@app.route('/fileDown', methods = ['GET', 'POST'])
+def throw_file():
 	if request.method == 'POST':
-		sw=0
-		files = os.listdir("./uploads")
-		for x in files:
-			if(x==request.form['file']):
-				sw=1
-		path = "./uploads/" 
-		return send_file(path + request.form['file'],
-				attachment_filename = request.form['file'],
-				as_attachment=True)"""
+		return jsonify({"name": "he"})
+        #form에 넣은 후 전달
+        #index = request.form['index']
+        #return send_file('./video',mimetype = 'video/mp4', as_attatchment=True)
 
 #서버 실행
 if __name__ == '__main__':

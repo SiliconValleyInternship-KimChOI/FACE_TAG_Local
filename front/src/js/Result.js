@@ -40,11 +40,13 @@ const Result= () => {
   const [uploadedurl, setUploadedurl] = useState(null);  //video url
   const [controlState, setControlState] = useState(false); //video control
 
-  // axios.get('http://localhost:5000/fileUpload').then(response=>{
-  //   setUploadedurl(URL.createObjectURL(response.data));
-  //   setControlState(true);
-  // })
-
+  const onClick = () => {
+    axios.post('http://localhost:5000/fileDown',{id: 'miiin', message: 'hi'}).then(response=>{
+     console.log(response.data);
+     // setUploadedurl(URL.createObjectURL(response.data));
+     setControlState(true);
+  })
+  }
     return(
         <Container>
             <Link to = "/">
@@ -54,8 +56,8 @@ const Result= () => {
                 <Text>동영상 인물 태깅 완료! </Text>
             </Box>
             <Box>
-            <ReactPlayer url="https://www.youtube.com/watch?v=-RDb-kSw-Ag&list=PL-FWHmxvuJ58xikmMnl2GQ610zeU0X4tz" 
-            height='300px' controls={controlState}/>
+              <button onClick = {onClick}>click</button>
+            <ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>
             </Box> 
         </Container>
     )
