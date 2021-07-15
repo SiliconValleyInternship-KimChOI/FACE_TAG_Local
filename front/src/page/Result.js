@@ -38,13 +38,13 @@ const Img = styled.img`
 
 const Result= (props) => {
   const filename = props.location.aboutProps
-  console.log(filename);
-
+  //console.log(filename);
   const [uploadedurl, setUploadedurl] = useState(null);  //video url
   const [controlState, setControlState] = useState(false); //video control
 
   const onClick = () => {
-    axios.post('http://localhost:5000/fileDown',{id: 'miiin', message: 'hi'}).then(response=>{
+    // let formData = new FormData()
+    axios.post('http://localhost:5000/fileDown',{filename}).then(response=>{
      console.log(response.data);
      // setUploadedurl(URL.createObjectURL(response.data));
      setControlState(true);

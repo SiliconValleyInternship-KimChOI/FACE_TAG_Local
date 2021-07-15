@@ -6,6 +6,7 @@ import styled from 'styled-components';  //css
 import {Form} from 'antd';               //form
 import Dropzone from 'react-dropzone';   //file upload
 import axios from 'axios';               //post
+import Loading from './Loading';
 
 const SelectBtn = styled.button`
     width: 48%;
@@ -67,8 +68,10 @@ const VideoUpload = () => {
     const [uploadedurl, setUploadedurl] = useState(null);  //video url
     const [controlState, setControlState] = useState(false); //video control
     const [name,setName] = useState(null); //video file name
-    const [llink,setLlink] = useState('/');
+    const [loading,setLoading] = useState(false);
+    const [llink,setLlink] = useState('/'); //routing link
     const onDrop = (files) => {  
+        setLoading(true);
         let formData = new FormData()
         const config = {
             header: { 'content-type': 'multipart/form-data'}
@@ -76,6 +79,7 @@ const VideoUpload = () => {
         formData.append('file', files[0])
         axios.post('http://localhost:5000/fileUpload', formData, config)
         .then((response) => {
+            setLoading(false);
             setUploadedurl(URL.createObjectURL(files[0]));
             setControlState(true);
             console.log(response.data);
@@ -83,13 +87,13 @@ const VideoUpload = () => {
             const tempname2 = JSON.parse(tempname).name;
             setName(tempname2);
             setLlink('/result');
-        });
+        }).catch(err=>{setLoading(true);})
     }
 
     return (
         <div>
             <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
-            <p>{name}</p>
+            {loading ? <Loading/> : <p>{name}</p>}
             <Form  onSubmit>
                 <Box>
                     <Dropzone

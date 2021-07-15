@@ -2,7 +2,7 @@ import styled from "styled-components";
 import '../css/index.css';
 import Logo from '../css/GAGA2.png';
 import {Link} from "react-router-dom";
-import VideoUpload from './VideoUpload';
+import VideoUpload from "../component/VideoUpload";
 
 // #수직정렬
 // display:flex;
