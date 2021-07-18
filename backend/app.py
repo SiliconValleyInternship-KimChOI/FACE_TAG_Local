@@ -25,9 +25,12 @@ db_2 = pymysql.connect(host='localhost',
                      db='timeline',
                      charset='utf8')"""
 
+@app.route('/')
+def default():
+	return 'Hello'
 
 #파일 업로드 처리
-@app.route('/fileUpload', methods = ['POST'])
+@app.route('/fileUpload', methods = ['POST','GET'])
 def get_video():
 	if request.method == 'POST':
 		video_file = request.files['file']
@@ -36,18 +39,19 @@ def get_video():
         #저장할 경로 + 파일명	
 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
-@app.route('/getdb', methods = ['POST'])
+@app.route('/getdb', methods = ['POST','GET'])
 def get_db():
 	if request.method == 'POST':
 		#db = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1234', db='GAGAGAGA', charset='utf8')
 		cursor = db.cursor()
 		cursor.execute("""
-				SELECT name
+				SELECT name, img
         		FROM gagagaga.characters
 				""")
 		result = cursor.fetchall()
+		print(result)
 		#img = request.form['name']
-		return jsonify(result)
+		#return jsonify(result)
 
 """@app.route('/getdbimg', methods = ['POST'])
 def get_img():	
