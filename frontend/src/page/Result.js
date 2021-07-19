@@ -41,8 +41,7 @@ const Result= (props) => {
   const filename = props.location.aboutProps;
   const [loading,setLoading] = useState(true);
   const [data,setData] = useState(null);
-  const [length,setLength] = useState(0);
-  const [uploadedurl, setUploadedurl] = useState(null);  //video url
+  const [uploadedurl, setUploadedurl] = useState('https://www.youtube.com/watch?v=lCiV4wACZ8w');  //video url
   const [controlState, setControlState] = useState(false); //video control
 
   // const onClick = () => {
@@ -59,35 +58,25 @@ const Result= (props) => {
   //   })
   // }
     useEffect (() => {
+      // video
+      axios.post('/fileDown', filename).then(response=>{
+      console.log(response.data);
+      setUploadedurl(response.data);
+      setControlState(true);
+    });
+
+      // character timeline
         var index = new FormData();
         axios.post('http://localhost:5000/getdb', index)
             .then(response =>{
               console.log(response.data);
-              //1차원 배열 
-              //var newArray = response.data.join();
-              //var character = newArray.split(',');   
-              //setData(character);
-              //setLength(character.length);
-              //setLoading(false);
+              setData(response.data);
+              setLoading(false);
             })
             .catch(error=>{
                 console.log(error);
             })
     },[]);
-    //    const submit = () => {
-    //     var index = new FormData();
-    //     axios.post('http://localhost:5000/getdb', index)
-    //         .then(response =>{
-    //           var newArray = response.data.join();
-    //           var character = newArray.split(',');   
-    //           setData(character);
-    //           setLength(character.length);
-    //           setLoading(false);
-    //         })
-    //         .catch(error=>{
-    //             console.log(error);
-    //         })
-    // };
 
     return(
         <Container>
@@ -97,14 +86,10 @@ const Result= (props) => {
             <Box>
                 <Text>동영상 인물 태깅 중...</Text>
             </Box>
-            {/* <Box>
-              <button onClick = {onClick}>click</button>
-              {console.log(uploadedurl)}
-              {console.log(controlState)}
-            <ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>
-            </Box> */}
-            {/* <button onClick={submit}>db</button> */}
-            {loading ? <Loading/> : <Timeline data={data} length={length}/>}
+             <Box>
+             {loading ? <Loading/> :<ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>}
+            </Box> 
+            {loading ? <Loading/> : <Timeline data={data}/>}
         </Container>
     )
   };

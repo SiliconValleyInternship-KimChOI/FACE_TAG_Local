@@ -10,37 +10,32 @@ const Table = styled.table`
   text-align:center;
   font-family: 'Do Hyeon';
 `
-// const Tr = styled.tr`
-//   border: 1px solid;
-// `
-
-// const Td = styled.td`
-//   border-top: 1px solid;
-//   font-size: 1.4em;
-//`
+const Td = styled.td`
+  font-size: 1.4em;
+`
 
 const Timeline = (props) => {
     const character = props.data;
-    const length = props.length;
-    console.log(character, length);
 
     return(
         <div>
             <Table>
                 <thead>
                     <tr>
-                        <th>Name</th>
                         <th>Image</th>
+                        <th>Name</th>
+                        <th>Timeline</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {character.map(c => {
+                    {character.map(row => {
                         return(
-                            <tr key={c}>
-                                <td key={c}>{c}</td>
+                            <tr key={row}>
+                                <Td key={row[1]}><img src={row[1]} height="200px"/></Td>
+                                <Td key={row[0]}>{row[0]}</Td>
                             </tr>
-                        )
+                        );
                     })}
                 </tbody>
             </Table>
