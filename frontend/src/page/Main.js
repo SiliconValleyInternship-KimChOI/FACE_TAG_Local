@@ -1,4 +1,4 @@
-  
+import react from 'react';  
 import styled from "styled-components";
 import '../css/index.css';
 import Logo from '../css/GAGA2.png';
@@ -43,7 +43,7 @@ const Img = styled.img`
 const Main = () => {
     return(
         <Container>
-          <Link to = "/">
+          <Link to = '/'>
             <Img src={Logo}/>
           </Link>
           <Box>

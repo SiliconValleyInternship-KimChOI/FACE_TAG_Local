@@ -41,22 +41,9 @@ const Result= (props) => {
   const filename = props.location.aboutProps;
   const [loading,setLoading] = useState(true);
   const [data,setData] = useState(null);
-  const [uploadedurl, setUploadedurl] = useState('https://www.youtube.com/watch?v=lCiV4wACZ8w');  //video url
+  const [uploadedurl, setUploadedurl] = useState(null);  //video url
   const [controlState, setControlState] = useState(false); //video control
 
-  // const onClick = () => {
-  //   axios.post('/fileDown', filename).then(response=>{
-  //   console.log(response.data);
-  //   console.log(formData.data);
-  //   const blob = new Blob([new ArrayBuffer(response.data)], { type: "video/mp4" });
-  //   //const url = window.URL.createObjectURL(blob);
-  //   setUploadedurl(URL.createObjectURL(blob));
-  //   //setUploadedurl(URL.createObjectURL(response.data));
-  //   //new Blob([response.data], { type: "video/mp4" })));
-  //   setControlState(true);
-  //   console.log(uploadedurl);
-  //   })
-  // }
     useEffect (() => {
       // video
       axios.post('/fileDown', filename).then(response=>{
@@ -80,11 +67,11 @@ const Result= (props) => {
 
     return(
         <Container>
-            <Link to = "/">
-            <Img src={Logo} alt = "logo" />
+            <Link to = '/'>
+            <Img src={Logo} alt = 'logo' />
             </Link>
             <Box>
-                <Text>동영상 인물 태깅 중...</Text>
+            {loading ? <Text>동영상 인물 태깅 중...</Text>:<Text>동영상 인물 태깅 완료!</Text>}
             </Box>
              <Box>
              {loading ? <Loading/> :<ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>}

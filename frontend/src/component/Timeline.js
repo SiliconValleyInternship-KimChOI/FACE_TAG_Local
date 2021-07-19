@@ -32,8 +32,9 @@ const Timeline = (props) => {
                     {character.map(row => {
                         return(
                             <tr key={row}>
-                                <Td key={row[1]}><img src={row[1]} height="200px"/></Td>
+                                <Td key={row[1]}><img src={row[1]} width='200px' height='200px'/></Td>
                                 <Td key={row[0]}>{row[0]}</Td>
+                                <Td>00:00 12:00 13:51 14:20</Td>
                             </tr>
                         );
                     })}
@@ -43,34 +44,3 @@ const Timeline = (props) => {
     );
 }
 export default Timeline;
-
-
-
-{/* <Table>
-              <thead>
-              <Tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Timeline</th>
-              </Tr>
-              </thead>
-              <tbody>
-              <Tr>
-              <Td><img src={harry} height="200px"/></Td>
-              <Td>Harry Potter</Td>
-              <Td>00:30 00:59 01:22</Td>
-              </Tr>
-
-              <Tr>
-              <Td><img src={harry} height="200px" /></Td>
-              <Td>Ron Weasley</Td>
-              <Td>00:11 00:50</Td>
-              </Tr>
-
-              <Tr>
-              <Td><img src={harry} height="200px" /></Td>
-              <Td>Hermione Granger</Td>
-              <Td>00:30 00:59 01:22</Td>
-              </Tr>
-              </tbody>
-              </Table> */}

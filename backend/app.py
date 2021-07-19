@@ -39,7 +39,7 @@ def get_video():
 @app.route('/fileDown', methods = ['POST'])
 def post_video():
 	if request.method == 'POST':
-		return 'https://www.youtube.com/watch?v=CuklIb9d3fI'
+		return 'https://gagagaga.s3.ap-northeast-2.amazonaws.com/abc.mp4'
 
 
 @app.route('/getdb', methods = ['POST'])
@@ -53,7 +53,6 @@ def get_db():
         		FROM gagagaga.characters
 				""")
 		result = cursor.fetchall()
-		#img = request.form['name']
 		return jsonify(result)		
 
 #서버 실행

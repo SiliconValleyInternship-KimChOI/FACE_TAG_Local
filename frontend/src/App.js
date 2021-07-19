@@ -6,8 +6,8 @@ import {Route} from "react-router-dom";
 function App() {
   return (
     <div>
-      <Route path="/" component={Main} exact/>
-      <Route path="/result" component={Result} />
+      <Route path='/' component={Main} exact/>
+      <Route path='/result' component={Result} />
     </div>
   );
 }

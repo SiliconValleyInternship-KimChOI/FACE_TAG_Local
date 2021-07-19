@@ -18,7 +18,7 @@ export default function Loading() {
 
   return (
     <div className={classes.root}>
-      <CircularProgress style={{'color': 'red'}} size="100px"/>
+      <CircularProgress style={{'color': 'red'}} size='100px'/>
     </div>
   );
 }
