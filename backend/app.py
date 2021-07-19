@@ -36,50 +36,24 @@ def get_video():
         #저장할 경로 + 파일명	
 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
+@app.route('/fileDown', methods = ['POST'])
+def post_video():
+	if request.method == 'POST':
+		return 'https://gagagaga.s3.ap-northeast-2.amazonaws.com/abc.mp4'
+
+
 @app.route('/getdb', methods = ['POST'])
 def get_db():
 	if request.method == 'POST':
 		#db = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1234', db='GAGAGAGA', charset='utf8')
 		cursor = db.cursor()
 		cursor.execute("""
-				SELECT name
+				SELECT name, 
+				img
         		FROM gagagaga.characters
 				""")
 		result = cursor.fetchall()
-		#img = request.form['name']
-		return jsonify(result)
-
-"""@app.route('/getdbimg', methods = ['POST'])
-def get_img():	
-	if request.method == 'POST':
-		cursor = db.cursor()
-		cursor.execute(
-				#SELECT img
-        		#FROM gagagaga.characters
-				)
-		result = cursor.fetchall()
-		return jsonify(result)
-
-
-#파일 넘겨줌
-#file_list = os.listdir(app.config['UPLOAD_FOLDER'])
-#filename = "".join(file_list)
-
-
-@app.route('/fileDown', methods = ['POST'])
-def download_file():
-	if request.method == 'POST':
-		f = request.form['name']
-		print(f)
-		path = "./video"
-		print(path)
-		try:
-			return send_from_directory(path, f, as_attachment=True)
-			#jsonify({'success': True, 'file': 'Received', 'name': f})
-			#send_from_directory(path, f, as_attachment=True)
-		except FileNotFoundError:
-			abort(404)"""
-
+		return jsonify(result)		
 
 #서버 실행
 if __name__ == '__main__':

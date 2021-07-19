@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 // 모듈 설치
-import {Link} from "react-router-dom";   //react link
+import {Link} from 'react-router-dom';   //react link
 import ReactPlayer from 'react-player';  //react video tag
 import styled from 'styled-components';  //css
 import {Form} from 'antd';               //form
@@ -93,7 +93,7 @@ const VideoUpload = () => {
             <Form  onSubmit>
                 <Box>
                     <Dropzone
-                        accept="video/*"
+                        accept='video/*'
                         onDrop={onDrop}
                         multiple={false}    // 한번에 파일을 2개 이상 올릴건지
                         maxSize={100000000}    // 최대 사이즈 
