@@ -47,11 +47,16 @@ def get_Character():
 	if request.method == 'POST':
 		#db = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1234', db='GAGAGAGA', charset='utf8')
 		cursor = db.cursor()
-		cursor.execute("""
-			SELECT name,img,start,end from characters 
-			RIGHT JOIN timeline ON characters.id = timeline.cid
-			ORDER BY name;
-		""")
+
+		#timeline table 전에 저장된 정보 삭제
+		# sql = '''TRUNCATE TABLE timeline;'''
+		# cursor.execute(sql)
+		#timeline 가져오기
+		sql = '''
+		SELECT name,img,start,end from characters 
+		RIGHT JOIN timeline ON characters.id = timeline.cid
+		ORDER BY name;'''
+		cursor.execute(sql)
 		result = cursor.fetchall()
 		return jsonify(result)	
 
