@@ -2,10 +2,6 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask import send_file, send_from_directory, abort
-
-# detect.py
-from detect import detect_class
-
 import pymysql
 import pandas as pd
 import json
@@ -46,6 +42,7 @@ def get_Character():
 		#timeline table 전에 저장된 정보 삭제
 		# sql = '''TRUNCATE TABLE timeline;'''
 		# cursor.execute(sql)
+		
 		#timeline 가져오기
 		sql = '''
 		SELECT name,img,start,end from characters 

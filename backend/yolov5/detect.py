@@ -1,7 +1,6 @@
 class detect_class(object):
     """
     Run inference with a YOLOv5 model on images, videos, directories, streams
-
     Usage:
     $ python path/to/detect.py --source path/to/img.jpg --weights yolov5s.pt --img 640
     """
@@ -307,18 +306,3 @@ class detect_class(object):
         print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
         check_requirements(exclude=('tensorboard', 'thop'))
         run(**vars(opt))
-
-
-
-
-
-
-
-
-
-
-'''
-if __name__ == "__main__":
-    opt = parse_opt()
-    main(opt)
-'''

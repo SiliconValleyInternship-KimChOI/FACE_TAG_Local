@@ -1,8 +1,12 @@
-# Celery ver 4.3
-# Redis  ver 3.5.3
+# Celery  5.1.2
+# Redis  3.5.3
+# Python 3.8.8
 
-# tasks.py
 from celery import Celery
+
+# detect.py
+import yolov5.detect as detect
+
 
 BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
