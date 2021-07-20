@@ -19,18 +19,13 @@ app.config['UPLOAD_FOLDER'] = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/bac
 s3_path = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/back/video_final'
 CORS(app)
 
-...
-AWS_ACCESS_KEY = "AKIAVJ6H6FLE5FNMZF4V"
-AWS_SECRET_KEY = "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"
-BUCKET_NAME = "gagagaga"
-...
-
 db = pymysql.connect(host='localhost',
                      port=3306,
                      user='root',
                      passwd='1234',
                      db='GAGAGAGA',
                      charset='utf8')
+
 """
 db_2 = pymysql.connect(host='localhost',
                      port=3306,
@@ -38,6 +33,7 @@ db_2 = pymysql.connect(host='localhost',
                      passwd='1234',
                      db='timeline',
                      charset='utf8')"""
+
 
 
 #파일 업로드 처리
@@ -66,8 +62,6 @@ s3.put_object(
 s3 = boto3.client('s3')
 s3.upload_file(filename, BUCKET_NAME, filename)
 
-
-
 @app.route('/fileDown', methods = ['POST'])
 def post_video():
 	if request.method == 'POST':
@@ -92,6 +86,31 @@ def get_db():
 				""")
 		result = cursor.fetchall()
 		return jsonify(result)
+
+@app.route('/getCharacter', methods = ['POST'])
+def get_Character():
+	if request.method == 'POST':
+		#db = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1234', db='GAGAGAGA', charset='utf8')
+		cursor = db.cursor()
+
+		#timeline table 전에 저장된 정보 삭제
+		# sql = '''TRUNCATE TABLE timeline;'''
+		# cursor.execute(sql)
+		
+		#timeline 가져오기
+		sql = '''
+		SELECT name,img,start,end from characters 
+		RIGHT JOIN timeline ON characters.id = timeline.cid
+		ORDER BY name;'''
+		cursor.execute(sql)
+		result = cursor.fetchall()
+		return jsonify(result)	
+
+'''
+# detect.py 실행
+test = detect_class("./weights_path", "./source_path")
+db_return = test.main()
+'''
 
 #서버 실행
 if __name__ == '__main__':
