@@ -18,10 +18,15 @@ const Container = styled.div`
   height: 100%;
   background-size: cover;
 `;
-
+const Header = styled.div`
+  width:100%;
+  height:20%;
+  border: 0px;
+  display:flex;
+`
 const Box = styled.div`
   width:100%;
-  height:50%;
+  height:40%;
   border: 0px;
   display:flex;
   align-items:center;
@@ -33,25 +38,31 @@ const Text = styled.p`
   margin-top:15%;
   font-family: 'Do Hyeon';
 `
+const Name = styled.p`
+  font-family :'Do Hyeon';
+  font-size: 2em;
+  text-align:center;
+  margin-top: 10%;
+  margin-left: 45%;
+`
 const Img = styled.img`
-  width: 12%;
-  height: 24%;
+  width: 13%;
+  height: 26%;
   position: absolute;
-  margin: 1% 45%;
+  margin: 5% 28%;
 `
 
 const Main = () => {
     return(
         <Container>
-          <Link to = '/'>
-            <Img src={Logo}/>
-          </Link>
-          <Box>
-              <Text>동영상을 업로드하고, 해당 영상의 등장 인물을 구분해보세요!</Text>
-          </Box>
-          <Box>
-            <VideoUpload></VideoUpload>
-          </Box>
+
+          <Header>
+          <Link to = '/'><Img src={Logo}/></Link>
+          <Name>GAGAGAGA Video Tag</Name>
+          </Header>
+
+          <Box><Text>동영상을 업로드하고, 해당 영상의 등장 인물을 구분해보세요!</Text></Box>
+          <Box><VideoUpload></VideoUpload></Box>
         </Container>
     )
 }

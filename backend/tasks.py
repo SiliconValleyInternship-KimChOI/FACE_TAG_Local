@@ -1,11 +1,7 @@
-"""import os
-import sys
-import time
+# Celery ver 4.3
+# Redis  ver 3.5.3
 
-from flask import Flask
-from flask import request
-from flask import jsonify
-
+# tasks.py
 from celery import Celery
 
 BROKER_URL = 'redis://localhost:6379/0'
@@ -14,4 +10,4 @@ app = Celery('tasks', broker=BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
 @app.task
 def add(x, y):
-        return x + y"""
+  return x + y

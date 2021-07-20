@@ -17,15 +17,6 @@ db = pymysql.connect(host='localhost',
                      passwd='1234',
                      db='GAGAGAGA',
                      charset='utf8')
-
-"""
-db_2 = pymysql.connect(host='localhost',
-                     port=3306,
-                     user='root',
-                     passwd='1234',
-                     db='timeline',
-                     charset='utf8')"""
-
 #파일 업로드 처리
 @app.route('/fileUpload', methods = ['POST'])
 def get_video():
