@@ -17,6 +17,12 @@ app.config['UPLOAD_FOLDER'] = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/bac
 s3_path = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/back/video_final'
 CORS(app)
 
+...
+AWS_ACCESS_KEY = "AKIAVJ6H6FLE5FNMZF4V"
+AWS_SECRET_KEY = "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"
+BUCKET_NAME = "gagagaga"
+...
+
 db = pymysql.connect(host='localhost',
                      port=3306,
                      user='root',
@@ -46,13 +52,19 @@ def get_video():
 #파일 이름
 file_list = os.listdir(app.config['UPLOAD_FOLDER2'])
 filename = "".join(file_list)
-#S3 버킷에 영상 저장
-s3bucket = s3_connection()
-s3bucket.put_object(
+"""#S3 버킷에 영상 저장
+s3 = s3_connection()
+s3.put_object(
 	Bucket = BUCKET_NAME,
     	Body = filename,
     	Key = s3_path,
-    	ContentType = filename.content_type)
+    	ContentType = filename.content_type)"""
+
+#S3 클라이언트 생성.
+s3 = boto3.client('s3')
+s3.upload_file(filename, BUCKET_NAME, filename)
+
+
 
 @app.route('/fileDown', methods = ['POST'])
 def post_video():
