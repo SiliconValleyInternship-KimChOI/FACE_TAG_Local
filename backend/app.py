@@ -15,8 +15,8 @@ import os
 import boto3
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/back/video'
-s3_path = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/back/video_final'
+app.config['UPLOAD_FOLDER'] = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/backend/video/'
+video_path = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/backend/video_final/'
 CORS(app)
 
 db = pymysql.connect(host='localhost',
@@ -47,32 +47,19 @@ def get_video():
 		video_file.save(os.path.join('./video', filename))   	
 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
-#파일 이름
-file_list = os.listdir(app.config['UPLOAD_FOLDER2'])
-filename = "".join(file_list)
-"""#S3 버킷에 영상 저장
-s3 = s3_connection()
-s3.put_object(
-	Bucket = BUCKET_NAME,
-    	Body = filename,
-    	Key = s3_path,
-    	ContentType = filename.content_type)"""
-
-#S3 클라이언트 생성.
-s3 = boto3.client('s3')
-s3.upload_file(filename, BUCKET_NAME, filename)
-
+#S3 버킷에 영상 저장
 @app.route('/fileDown', methods = ['POST'])
 def post_video():
 	if request.method == 'POST':
-	s3 = boto3.resource('s3')
-	bucket = s3.Bucket(BUCKET_NAME)
-	bucket.upload_file("upload.txt", filename)
-	location = boto3.client('s3').get_bucket_location(Bucket=BUCKET_NAME)['LocationConstraint']
-	url = "https://s3-%s.amazonaws.com/%s/%s" % (location, BUCKET_NAME, filename)
-	#location = s3.get_bucket_location(Bucket = BUCKET_NAME)['LocationConstraint']
-	#video_url = f'https://{BUCKET_NAME}.s3.{location}.amazonaws.com/{s3_path}'
-	return jsonify(url)
+		#파일 이름 가져오기
+		file_list = os.listdir(video_path)
+		filename = "".join(file_list)
+		#S3 버킷에 영상 저장
+		s3 = s3_connection()
+		s3.upload_file(video_path+filename, BUCKET_NAME, filename)
+		#영상 url
+		url = "https://{BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{filename}"
+		return jsonify(url)
 
 #DB 정보 받기
 @app.route('/getdb', methods = ['POST'])
