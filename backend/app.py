@@ -3,6 +3,8 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask import abort
 
+
+# connection.py
 from connection import s3_connection, BUCKET_NAME
 
 import pymysql
