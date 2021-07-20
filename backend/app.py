@@ -2,6 +2,10 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask import send_file, send_from_directory, abort
+
+# detect.py
+from detect import detect_class
+
 import pymysql
 import pandas as pd
 import json
@@ -24,7 +28,6 @@ db_2 = pymysql.connect(host='localhost',
                      passwd='1234',
                      db='timeline',
                      charset='utf8')"""
-
 
 #파일 업로드 처리
 @app.route('/fileUpload', methods = ['POST'])
@@ -54,6 +57,12 @@ def get_db():
 				""")
 		result = cursor.fetchall()
 		return jsonify(result)		
+
+'''
+# detect.py 실행
+test = detect_class("./weights_path", "./source_path")
+db_return = test.main()
+'''
 
 #서버 실행
 if __name__ == '__main__':
