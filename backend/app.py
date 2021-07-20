@@ -17,6 +17,7 @@ db = pymysql.connect(host='localhost',
                      passwd='1234',
                      db='GAGAGAGA',
                      charset='utf8')
+
 """
 db_2 = pymysql.connect(host='localhost',
                      port=3306,
@@ -24,7 +25,6 @@ db_2 = pymysql.connect(host='localhost',
                      passwd='1234',
                      db='timeline',
                      charset='utf8')"""
-
 
 #파일 업로드 처리
 @app.route('/fileUpload', methods = ['POST'])
@@ -42,18 +42,23 @@ def post_video():
 		return 'https://gagagaga.s3.ap-northeast-2.amazonaws.com/abc.mp4'
 
 
-@app.route('/getdb', methods = ['POST'])
-def get_db():
+@app.route('/getCharacter', methods = ['GET','POST'])
+def get_Character():
 	if request.method == 'POST':
 		#db = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1234', db='GAGAGAGA', charset='utf8')
 		cursor = db.cursor()
-		cursor.execute("""
-				SELECT name, 
-				img
-        		FROM gagagaga.characters
-				""")
+
+		#timeline table 전에 저장된 정보 삭제
+		# sql = '''TRUNCATE TABLE timeline;'''
+		# cursor.execute(sql)
+		#timeline 가져오기
+		sql = '''
+		SELECT name,img,start,end from characters 
+		RIGHT JOIN timeline ON characters.id = timeline.cid
+		ORDER BY name;'''
+		cursor.execute(sql)
 		result = cursor.fetchall()
-		return jsonify(result)		
+		return jsonify(result)	
 
 #서버 실행
 if __name__ == '__main__':

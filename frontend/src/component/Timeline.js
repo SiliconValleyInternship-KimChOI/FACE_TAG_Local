@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const Table = styled.table`
@@ -12,11 +11,28 @@ const Table = styled.table`
 `
 const Td = styled.td`
   font-size: 1.4em;
+  border-top: 1px solid;
 `
 
 const Timeline = (props) => {
-    const character = props.data;
-
+    const data = props.data;
+    const data_length = props.data.length;
+    const characters = new Array();
+    let temp = -1;
+    for (let i=0; i<data_length; i++){
+        if (i != 0 && data[i][0] == data[i-1][0]){
+            characters[temp][2].push([data[i][2],data[i][3]]);
+        }
+        else{
+        temp++;
+        characters[temp] = []
+        characters[temp].push(data[i][0]);
+        characters[temp].push(data[i][1]);
+        characters[temp][2] = new Array();
+        characters[temp][2].push([data[i][2],data[i][3]]);        
+        }
+    }
+    console.log(characters);
     return(
         <div>
             <Table>
@@ -29,12 +45,18 @@ const Timeline = (props) => {
                 </thead>
 
                 <tbody>
-                    {character.map(row => {
+                    {characters.map(row => {
                         return(
                             <tr key={row}>
                                 <Td key={row[1]}><img src={row[1]} width='200px' height='200px'/></Td>
                                 <Td key={row[0]}>{row[0]}</Td>
-                                <Td>00:00 12:00 13:51 14:20</Td>
+                                <Td key={row[2]}>
+                                {row[2].map(time => {
+                                    return(
+                                        <p>{time[0]}-{time[1]}</p>
+                                    )
+                                })}
+                                </Td> 
                             </tr>
                         );
                     })}

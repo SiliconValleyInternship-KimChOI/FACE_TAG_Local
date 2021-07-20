@@ -40,7 +40,7 @@ const Img = styled.img`
 const Result= (props) => {
   const filename = props.location.aboutProps;
   const [loading,setLoading] = useState(true);
-  const [data,setData] = useState(null);
+  const [data,setData] = useState(null); //db -> name, image, timeline
   const [uploadedurl, setUploadedurl] = useState(null);  //video url
   const [controlState, setControlState] = useState(false); //video control
 
@@ -53,16 +53,13 @@ const Result= (props) => {
     });
 
       // character timeline
-        var index = new FormData();
-        axios.post('http://localhost:5000/getdb', index)
-            .then(response =>{
-              console.log(response.data);
-              setData(response.data);
-              setLoading(false);
-            })
-            .catch(error=>{
-                console.log(error);
-            })
+      var index = new FormData();
+      axios.post('http://localhost:5000/getCharacter', index)
+        .then(response =>{
+          //console.log(response.data);
+          setData(response.data);
+          setLoading(false);})
+        .catch(error=>{console.log(error);})
     },[]);
 
     return(
@@ -76,6 +73,7 @@ const Result= (props) => {
              <Box>
              {loading ? <Loading/> :<ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>}
             </Box> 
+            <br/>
             {loading ? <Loading/> : <Timeline data={data}/>}
         </Container>
     )
