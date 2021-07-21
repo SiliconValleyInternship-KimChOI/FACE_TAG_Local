@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask import send_file, send_from_directory, abort
+from yolov5 import detect
 import pymysql
 import pandas as pd
 import json
@@ -57,6 +58,7 @@ def get_Character():
 test = detect_class("./weights_path", "./source_path")
 db_return = test.main()
 '''
+test = detect.run(weights='./backend/yolov5/best.pt',source="./backend/harrypotter.mp4")
 
 #서버 실행
 if __name__ == '__main__':
