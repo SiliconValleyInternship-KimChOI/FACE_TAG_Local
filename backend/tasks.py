@@ -22,7 +22,6 @@ def processing(url):
   #timeline = test.main()
   #print(timeline)
 
-
 # test
 @celery.task
 def add(x,y):

@@ -4,7 +4,7 @@
 
 """Run inference with a YOLOv5 model on images, videos, directories, streams
 Usage:
-    $ python path/to/detect.py --source path/to/img.jpg --weights yolov5s.pt --img 640
+    $ python3 ./yolov5/detect.py --source ./yolov5/data/img.jpg --weights ./yolov5/best.pt
 """
 
 import argparse
@@ -56,7 +56,7 @@ def run(weights='./yolov5/best.pt',  # model.pt path(s)
         augment=False,  # augmented inference
         visualize=False,  # visualize features
         update=False,  # update all models
-        project='silicon_valley/',  # save results to project/name
+        project='../video_final/',  # save results to project/name
         name='output',  # save results to project/name
         exist_ok=False,  # existing project/name ok, do not increment
         line_thickness=3,  # bounding box thickness (pixels)
@@ -77,12 +77,12 @@ def run(weights='./yolov5/best.pt',  # model.pt path(s)
     save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
    
     #####################################
-    print('\n save_dir ', save_dir, '\n')
+    #print('\n save_dir ', save_dir, '\n')
 
     (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
     
     #####################################
-    print('\n save_dir ', save_dir, '\n')
+    #print('\n save_dir ', save_dir, '\n')
     
     # Initialize
     set_logging()
@@ -173,9 +173,9 @@ def run(weights='./yolov5/best.pt',  # model.pt path(s)
             # s3 path
             append_path = increment_path(Path(project) / p.name, exist_ok=exist_ok)
             save_to_s3 = str(append_path / '')
-            print('\nsave_to_s3: ', append_path, '\n')
-            print('save_path: ', save_path)
-            print('txt_path: ', txt_path, '\n')
+            #print('\nsave_to_s3: ', append_path, '\n')
+            #print('save_path: ', save_path)
+            #print('txt_path: ', txt_path, '\n')
             ###################################################################################################################
 
             s += '%gx%g ' % img.shape[2:]  # print string
@@ -260,18 +260,22 @@ def run(weights='./yolov5/best.pt',  # model.pt path(s)
     
     ###################################################################################################################
     # video to s3 bucket 
-    s3.upload_file(save_path, bucket_name, save_to_s3)
+    #s3.upload_file(save_path, bucket_name, save_to_s3)
     ###################################################################################################################
     
     #metadata.close()
     print(f'Done. ({time.time() - t0:.3f}s)')
+    
+    # file for metadata 
+    metadata = open('./list/appear_list.txt', 'a') # append mode
+    metadata.write(str(db))
 
     print(db)
     return db
 
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='./best.pt', help='model.pt path(s)')
+    parser.add_argument('--weights', nargs='+', type=str, default='./yolov5/best.pt', help='model.pt path(s)')
     parser.add_argument('--source', type=str, default='./data', help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--imgsz', '--img', '--img-size', type=int, default=640, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
@@ -288,7 +292,7 @@ def parse_opt():
     parser.add_argument('--augment', action='store_true', help='augmented inference')
     parser.add_argument('--visualize', action='store_true', help='visualize features')
     parser.add_argument('--update', action='store_true', help='update all models')
-    parser.add_argument('--project', default='silicon_valley/', help='save results to project/name')
+    parser.add_argument('--project', default='./output_video', help='save results to project/name')
     parser.add_argument('--name', default='output', help='save results to project/name')
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     parser.add_argument('--line-thickness', default=3, type=int, help='bounding box thickness (pixels)')
@@ -301,7 +305,7 @@ def parse_opt():
 
 def main(opt):
     print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
-    check_requirements(exclude=('tensorboard', 'thop'))
+    #check_requirements(exclude=('tensorboard', 'thop'))
     run(**vars(opt))
 
 
