@@ -10,6 +10,9 @@ import os
 # connection.py
 from connection import s3_connection, BUCKET_NAME
 import boto3
+# sec_to_time
+from time import strftime
+from time import gmtime
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './input_video/'
@@ -32,9 +35,39 @@ db = pymysql.connect(host='localhost',
 @app.route('/')
 def default():
 	# delay()는 실행 함수고 get()은 실행 결과값 가져오는 함수
-	tmp = add.delay(500,20000)
-	video = processing.delay("video/abc.mp4")   
-	return str(tmp.get())
+	#tmp = add.delay(500,20000)
+	#video = processing.delay("input_video/abc.mp4")
+
+	# timeline list 
+	with open("list/appear_list.txt", "r", encoding="utf-8") as f:
+		global timeline
+		data = f.read()
+		timeline = eval(data)
+	# timeline -> db저장
+	key = timeline.keys()
+	for i in key:
+		if i == 'harrypotter':
+			cid = 1
+		elif i == 'ron':
+			cid = 2
+		elif i == 'hermione':
+			cid = 3
+		
+		timeline_value = timeline[i]
+		#print(timeline_value)
+		val = []
+		for j in timeline_value:
+			start = strftime("%H:%M:%S", gmtime(j[0]))
+			end = strftime("%H:%M:%S", gmtime(j[1]))
+			val.append((cid,start,end))
+		print(val)
+		cursor = db.cursor()
+		sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
+		cursor.executemany(sql,val)
+		db.commit()
+		val.clear()
+
+	return 'return'
 
 
 # React -> Flask 파일 업로드 처리
@@ -83,23 +116,17 @@ def get_Character():
 		cursor = db.cursor()
 
 		#timeline table 전에 저장된 정보 삭제
-		# sql = '''TRUNCATE TABLE timeline;'''
+		# sql = 'TRUNCATE TABLE timeline;'
 		# cursor.execute(sql)
 		
 		#timeline 가져오기
 		sql = '''
 		SELECT name,img,start,end from characters 
 		RIGHT JOIN timeline ON characters.id = timeline.cid
-		ORDER BY name;'''
+		ORDER BY name, start;'''
 		cursor.execute(sql)
 		result = cursor.fetchall()
 		return jsonify(result)	
-
-'''
-# detect.py 실행
-test = detect_class("./weights_path", "./source_path")
-db_return = test.main()
-'''
 
 #서버 실행
 if __name__ == '__main__':
