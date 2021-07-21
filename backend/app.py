@@ -1,16 +1,46 @@
-from flask import Flask, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
+from flask import abort
+
+from celery import Celery
+
+# connection.py
+from connection import s3_connection, BUCKET_NAME
+
 import pymysql
 import pandas as pd
+import json
+import sys
 import os
-# Celery 속 코드 가져오기
-from tasks import add, celery
+import boto3
+
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        backend=app.config['CELERY_RESULT_BACKEND'],
+        broker=app.config['CELERY_BROKER_URL'],
+    )
+    celery.conf.update(app.config)
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
 
 app = Flask(__name__)
-# React - Flask 임시 연동
+app.config['UPLOAD_FOLDER'] = './input_video/'
+video_path = './output_video/'
 CORS(app)
-# Flask - DB 연동
+
+app.config.update(
+    CELERY_BROKER_URL='redis://localhost:6379/0',
+    CELERY_RESULT_BACKEND='redis://localhost:6379/0'
+)
+
 db = pymysql.connect(host='localhost',
                      port=3306,
                      user='root',
@@ -18,36 +48,59 @@ db = pymysql.connect(host='localhost',
                      db='GAGAGAGA',
                      charset='utf8')
 
-# Celery task 실행 예시
-@app.route('/')
-def default():
-	# delay()는 실행 함수고 get()은 실행 결과값 가져오는 함수
-	tmp = add.delay(500,20000)   
-	return str(tmp.get())
+"""
+db_2 = pymysql.connect(host='localhost',
+                     port=3306,
+                     user='root',
+                     passwd='1234',
+                     db='timeline',
+                     charset='utf8')"""
 
-# React -> Flask 파일 업로드 처리
+
+
+#파일 업로드 처리
 @app.route('/fileUpload', methods = ['POST'])
 def get_video():
 	if request.method == 'POST':
 		video_file = request.files['file']
+		#파일 안정성 확인
 		filename = secure_filename(video_file.filename)
-		video_file.save(os.path.join('./video', filename))	
+		#video 폴더에 저장
+		video_file.save(os.path.join('./video', filename))		
 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
-# Flask -> React 처리한 파일 반환
+
+#S3 버킷에 영상 저장
 @app.route('/fileDown', methods = ['POST'])
 def post_video():
-	# 임시로 영상 처리 해보기
-	#processing('https://gagagaga.s3.ap-northeast-2.amazonaws.com/abc+(1).mp4')
-
-	# s3버켓에 담긴 동영상 파일 보내기~
 	if request.method == 'POST':
-		return 'https://gagagaga.s3.ap-northeast-2.amazonaws.com/abc+(1).mp4'
+		#파일 이름 가져오기
+		file_list = os.listdir(video_path)
+		filename = "".join(file_list)
+		#S3 버킷에 영상 저장
+		s3 = s3_connection()
+		s3.upload_file(video_path+filename, BUCKET_NAME, filename)
+		#영상 url
+		url = "https://{BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{filename}"
+		return jsonify(url)
 
-# DB -> Flask -> React 등장인물 메타정보 반환
-@app.route('/getCharacter', methods = ['GET','POST'])
+#DB 정보 받기
+@app.route('/getdb', methods = ['POST'])
+def get_db():
+	if request.method == 'POST':
+		cursor = db.cursor()
+		cursor.execute("""
+				SELECT name, 
+				img
+        		FROM gagagaga.characters
+				""")
+		result = cursor.fetchall()
+		return jsonify(result)
+
+@app.route('/getCharacter', methods = ['POST'])
 def get_Character():
 	if request.method == 'POST':
+		#db = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1234', db='GAGAGAGA', charset='utf8')
 		cursor = db.cursor()
 
 		#timeline table 전에 저장된 정보 삭제
@@ -62,6 +115,12 @@ def get_Character():
 		cursor.execute(sql)
 		result = cursor.fetchall()
 		return jsonify(result)	
+
+'''
+# detect.py 실행
+test = detect_class("./weights_path", "./source_path")
+db_return = test.main()
+'''
 
 #서버 실행
 if __name__ == '__main__':
