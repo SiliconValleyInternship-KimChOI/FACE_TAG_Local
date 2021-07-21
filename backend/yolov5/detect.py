@@ -260,9 +260,10 @@ class detect_class(object):
 
         #metadata.close()
         print(f'Done. ({time.time() - t0:.3f}s)')
-		
+
         print(db)
-	#return db
+        return db
+
 
     def parse_opt():
         parser = argparse.ArgumentParser()

@@ -1,15 +1,45 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
-from flask import send_file, send_from_directory, abort
+from flask import abort
+
+from celery import Celery
+
+# connection.py
+from connection import s3_connection, BUCKET_NAME
+
 import pymysql
 import pandas as pd
 import json
 import sys
 import os
+import boto3
+
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        backend=app.config['CELERY_RESULT_BACKEND'],
+        broker=app.config['CELERY_BROKER_URL'],
+    )
+    celery.conf.update(app.config)
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
+
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/back/video'
+app.config['UPLOAD_FOLDER'] = './input_video/'
+video_path = './output_video/'
 CORS(app)
+
+app.config.update(
+    CELERY_BROKER_URL='redis://localhost:6379/0',
+    CELERY_RESULT_BACKEND='redis://localhost:6379/0'
+)
 
 db = pymysql.connect(host='localhost',
                      port=3306,
@@ -17,23 +47,57 @@ db = pymysql.connect(host='localhost',
                      passwd='1234',
                      db='GAGAGAGA',
                      charset='utf8')
+
+"""
+db_2 = pymysql.connect(host='localhost',
+                     port=3306,
+                     user='root',
+                     passwd='1234',
+                     db='timeline',
+                     charset='utf8')"""
+
+
+
 #파일 업로드 처리
 @app.route('/fileUpload', methods = ['POST'])
 def get_video():
 	if request.method == 'POST':
 		video_file = request.files['file']
+		#파일 안정성 확인
 		filename = secure_filename(video_file.filename)
-		video_file.save(os.path.join('./video', filename))
-        #저장할 경로 + 파일명	
+		#video 폴더에 저장
+		video_file.save(os.path.join('./video', filename))		
 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
+
+#S3 버킷에 영상 저장
 @app.route('/fileDown', methods = ['POST'])
 def post_video():
 	if request.method == 'POST':
-		return 'https://gagagaga.s3.ap-northeast-2.amazonaws.com/abc.mp4'
+		#파일 이름 가져오기
+		file_list = os.listdir(video_path)
+		filename = "".join(file_list)
+		#S3 버킷에 영상 저장
+		s3 = s3_connection()
+		s3.upload_file(video_path+filename, BUCKET_NAME, filename)
+		#영상 url
+		url = "https://{BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{filename}"
+		return jsonify(url)
 
+#DB 정보 받기
+@app.route('/getdb', methods = ['POST'])
+def get_db():
+	if request.method == 'POST':
+		cursor = db.cursor()
+		cursor.execute("""
+				SELECT name, 
+				img
+        		FROM gagagaga.characters
+				""")
+		result = cursor.fetchall()
+		return jsonify(result)
 
-@app.route('/getCharacter', methods = ['GET','POST'])
+@app.route('/getCharacter', methods = ['POST'])
 def get_Character():
 	if request.method == 'POST':
 		#db = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1234', db='GAGAGAGA', charset='utf8')

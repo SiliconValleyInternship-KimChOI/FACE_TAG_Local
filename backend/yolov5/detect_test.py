@@ -1,10 +1,8 @@
-
 # file_structure_check.ipynb에서 yolo clone했을 때 생성되는 detection.py를 수정
 # confidence 일정 이하는 표시 x
 # 등장인물 연속 등장구간 저장
 
 """Run inference with a YOLOv5 model on images, videos, directories, streams
-
 Usage:
     $ python3 ./yolov5/detect.py --source ./yolov5/data/img.jpg --weights ./yolov5/best.pt
 """
