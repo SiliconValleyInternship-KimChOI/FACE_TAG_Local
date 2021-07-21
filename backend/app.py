@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask import abort
 
+from celery import Celery
 
 # connection.py
 from connection import s3_connection, BUCKET_NAME
@@ -14,10 +15,31 @@ import sys
 import os
 import boto3
 
+def make_celery(app):
+    celery = Celery(
+        app.import_name,
+        backend=app.config['CELERY_RESULT_BACKEND'],
+        broker=app.config['CELERY_BROKER_URL'],
+    )
+    celery.conf.update(app.config)
+
+    class ContextTask(celery.Task):
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
+
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/backend/video/'
-video_path = 'C:/Users/chltp/OneDrive/문서/GitHub/kimchoi/backend/video_final/'
+app.config['UPLOAD_FOLDER'] = './video/'
+video_path = './video_final/'
 CORS(app)
+
+app.config.update(
+    CELERY_BROKER_URL='redis://localhost:6379/0',
+    CELERY_RESULT_BACKEND='redis://localhost:6379/0'
+)
 
 db = pymysql.connect(host='localhost',
                      port=3306,
@@ -44,7 +66,7 @@ def get_video():
 		#파일 안정성 확인
 		filename = secure_filename(video_file.filename)
 		#video 폴더에 저장
-		video_file.save(os.path.join('./video', filename))   	
+		video_file.save(os.path.join('./video', filename))
 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
 #S3 버킷에 영상 저장
