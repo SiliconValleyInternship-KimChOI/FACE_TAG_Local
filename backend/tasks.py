@@ -2,6 +2,7 @@
 # Redis  3.5.3
 # Python 3.8.8
 from celery import Celery
+import os
 from yolov5.detect import detect_class
 
 # Message Broker => Redis
@@ -11,11 +12,12 @@ celery = Celery('tasks', broker=BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
 # practical
 @celery.task
-def processing():
-  # url = "https://gagagaga.s3.ap-northeast-2.amazonaws.com/abc+(1).mp4"
+def processing(url):
   example = "python ./yolov5/detect_test.py --source " + url + " --weights ./yolov5/best.pt"
-  print(example)
-  # test = detect_class("./weights_path", "./source_path")
+  os.system(example)
+
+  #python ./yolov5/detect_test.py --source video/abc.mp4 --weights ./yolov5/best.pt
+  #test = detect_class("./weights_path", "./source_path")
   #test = detect_class("./yolov5/best.pt","video/abc.mp4")
   #timeline = test.main()
   #print(timeline)

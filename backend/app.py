@@ -5,7 +5,7 @@ import pymysql
 import pandas as pd
 import os
 # Celery 속 코드 가져오기
-from tasks import add, celery
+from tasks import celery, add, processing
 
 app = Flask(__name__)
 # React - Flask 임시 연동
@@ -22,8 +22,10 @@ db = pymysql.connect(host='localhost',
 @app.route('/')
 def default():
 	# delay()는 실행 함수고 get()은 실행 결과값 가져오는 함수
-	tmp = add.delay(500,20000)   
+	tmp = add.delay(500,20000)
+	video = processing.delay("video/abc.mp4")   
 	return str(tmp.get())
+
 
 # React -> Flask 파일 업로드 처리
 @app.route('/fileUpload', methods = ['POST'])
