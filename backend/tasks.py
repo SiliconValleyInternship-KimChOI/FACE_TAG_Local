@@ -12,10 +12,9 @@ celery = Celery('tasks', broker=BROKER_URL, backend=CELERY_RESULT_BACKEND)
 @celery.task
 def processing(path):
   detect = Detect_class(path)
-  source = detect.get_source()
-  db = detect.run()
-  print('\ndb: ', db)
-  return db
+  timeline = detect.run()
+  print('\nTimeline: ', timeline)
+  return timeline
 
 # @celery.task
 # def processing(url):
