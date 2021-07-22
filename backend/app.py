@@ -49,7 +49,7 @@ def get_video():
 def insertTimeline(timeline):
 	# Timeline table 전에 저장된 정보 삭제
 	cursor = db.cursor()
-	sql = '''TRUNCATE TABLE timeline;'''
+	sql = '''TRUNCATE timeline;'''
 	cursor.execute(sql)
 	key = timeline.keys()
 	for i in key:
@@ -93,7 +93,7 @@ def post_video():
 		# 소리 합치기
 		videoclip = VideoFileClip(video_path+"output/"+filename)
 		videoclip.audio=audioclip  #아웃풋 동영상에 오디오 씌우기
-		videoclip.write_videofile(video_path+"output/"+filename) #아웃풋 동영상 덮어쓰기
+		videoclip.write_videofile(video_path+filename) #아웃풋 동영상 덮어쓰기
 
 
 		#S3 버킷에 영상 저장
