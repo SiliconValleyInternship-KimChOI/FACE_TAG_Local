@@ -7,8 +7,10 @@ from tasks import celery, processing
 import pymysql
 import pandas as pd
 import os
-# convert sec_to_time
+# Convert sec_to_time
 from time import strftime, gmtime
+# Sound synthesis
+from moviepy.editor import *
 # connection.py
 from connection import s3_connection, BUCKET_NAME
 import boto3
@@ -37,6 +39,10 @@ def get_video():
 		filename = secure_filename(video_file.filename)
 		# video 폴더에 저장
 		video_file.save(os.path.join('./input_video', filename))
+		# 소리 합성을 위해
+		global audioclip
+		audioclip = VideoFileClip("./input_video/"+filename).audio #오디오 받기
+
 	return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
 # DB저장
@@ -83,6 +89,12 @@ def post_video():
 		print(timeline)
 		# DB저장
 		insertTimeline(timeline)
+
+		# 소리 합치기
+		videoclip = VideoFileClip(video_path+"output/"+filename)
+		videoclip.audio=audioclip  #아웃풋 동영상에 오디오 씌우기
+		videoclip.write_videofile(video_path+"output/"+filename) #아웃풋 동영상 덮어쓰기
+
 
 		#S3 버킷에 영상 저장
 		s3 = s3_connection()
