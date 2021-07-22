@@ -267,7 +267,7 @@ def run(weights='./yolov5/best.pt',  # model.pt path(s)
     print(f'Done. ({time.time() - t0:.3f}s)')
     
     # file for metadata 
-    metadata = open('./list/appear_list.txt', 'a') # append mode
+    metadata = open('./list/timeline.txt', 'a') # append mode
     metadata.write(str(db))
 
     print(db)
@@ -312,4 +312,3 @@ def main(opt):
 if __name__ == "__main__":
     opt = parse_opt()
     main(opt)
-
