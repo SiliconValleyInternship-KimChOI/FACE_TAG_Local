@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask import abort
 # Celery 속 코드 가져오기
-from tasks import celery, add, processing
+from tasks import celery, processing, get_db
 import pymysql
 import pandas as pd
 import os
