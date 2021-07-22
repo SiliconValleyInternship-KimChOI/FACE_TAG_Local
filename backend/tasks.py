@@ -10,20 +10,14 @@ BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 celery = Celery('tasks', broker=BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
-# practical
 @celery.task
 def processing(url):
   #영상처리
-  #example = "python ./yolov5/detect_test.py --source " + url + " --weights ./yolov5/best.pt"
-  #os.system(example)
+  # example = "python ./yolov5/detect_test.py --source " + url + " --weights ./yolov5/best.pt"
+  # os.system(example)
   
   #python ./yolov5/detect_test.py --source video/abc.mp4 --weights ./yolov5/best.pt
   #test = detect_class("./weights_path", "./source_path")
   #test = detect_class("./yolov5/best.pt","video/abc.mp4")
   #timeline = test.main()
   return '완료'
-
-# test
-@celery.task
-def add(x,y):
-  return x + y

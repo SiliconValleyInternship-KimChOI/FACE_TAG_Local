@@ -11,8 +11,7 @@ import os
 from connection import s3_connection, BUCKET_NAME
 import boto3
 # sec_to_time
-from time import strftime
-from time import gmtime
+from time import strftime, gmtime
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './input_video/'
@@ -34,16 +33,17 @@ db = pymysql.connect(host='localhost',
 # Celery task 실행 예시
 @app.route('/')
 def default():
-	# delay()는 실행 함수고 get()은 실행 결과값 가져오는 함수
-	#tmp = add.delay(500,20000)
+	# 영상 처리
 	#video = processing.delay("input_video/abc.mp4")
 
-	# timeline list 
+    # 등장인물 타임라인 
+	#if video.ready() == True:
 	with open("list/appear_list.txt", "r", encoding="utf-8") as f:
 		global timeline
 		data = f.read()
 		timeline = eval(data)
-	# timeline -> db저장
+	
+	# DB저장
 	key = timeline.keys()
 	for i in key:
 		if i == 'harrypotter':
@@ -54,7 +54,7 @@ def default():
 			cid = 3
 		
 		timeline_value = timeline[i]
-		#print(timeline_value)
+
 		val = []
 		for j in timeline_value:
 			start = strftime("%H:%M:%S", gmtime(j[0]))
@@ -66,8 +66,16 @@ def default():
 		cursor.executemany(sql,val)
 		db.commit()
 		val.clear()
+	#os.remove('list/appear_list.txt')
+	return 'video process'
 
-	return 'return'
+
+
+
+
+
+
+
 
 
 # React -> Flask 파일 업로드 처리
@@ -78,7 +86,8 @@ def get_video():
 		#파일 안정성 확인
 		filename = secure_filename(video_file.filename)
 		#video 폴더에 저장
-		video_file.save(os.path.join('./video', filename))		
+		video_file.save(os.path.join('./input_video', filename))
+		video = processing.delay("input_video/abc.mp4")		
 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
 
