@@ -1,6 +1,8 @@
 # Celery  5.1.2
 # Redis  3.5.3
 # Python 3.8.8
+# Windows : celery -A tasks worker --pool=solo -l info
+
 from celery import Celery
 from yolov5.detect import Detect_class
 

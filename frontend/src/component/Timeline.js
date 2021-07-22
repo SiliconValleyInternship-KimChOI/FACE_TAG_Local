@@ -53,7 +53,7 @@ const Timeline = (props) => {
                                 <Td key={row[2]}>
                                 {row[2].map(time => {
                                     return(
-                                        <p>{time[0]}-{time[1]}</p>
+                                        <p key={time}>{time[0]}-{time[1]}</p>
                                     )
                                 })}
                                 </Td> 
