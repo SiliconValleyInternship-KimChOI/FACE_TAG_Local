@@ -30,54 +30,6 @@ db = pymysql.connect(host='localhost',
                      db='GAGAGAGA',
                      charset='utf8')
 
-# Celery task 실행 예시
-@app.route('/')
-def default():
-	# 영상 처리
-	#video = processing.delay("input_video/abc.mp4")
-
-    # 등장인물 타임라인 
-	#if video.ready() == True:
-	with open("list/appear_list.txt", "r", encoding="utf-8") as f:
-		global timeline
-		data = f.read()
-		timeline = eval(data)
-	
-	# DB저장
-	key = timeline.keys()
-	for i in key:
-		if i == 'harrypotter':
-			cid = 1
-		elif i == 'ron':
-			cid = 2
-		elif i == 'hermione':
-			cid = 3
-		
-		timeline_value = timeline[i]
-
-		val = []
-		for j in timeline_value:
-			start = strftime("%H:%M:%S", gmtime(j[0]))
-			end = strftime("%H:%M:%S", gmtime(j[1]))
-			val.append((cid,start,end))
-		print(val)
-		cursor = db.cursor()
-		sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
-		cursor.executemany(sql,val)
-		db.commit()
-		val.clear()
-	#os.remove('list/appear_list.txt')
-	return 'video process'
-
-
-
-
-
-
-
-
-
-
 # React -> Flask 파일 업로드 처리
 @app.route('/fileUpload', methods = ['POST'])
 def get_video():
@@ -87,7 +39,39 @@ def get_video():
 		filename = secure_filename(video_file.filename)
 		#video 폴더에 저장
 		video_file.save(os.path.join('./input_video', filename))
-		video = processing.delay("input_video/abc.mp4")		
+
+	# 영상 처리
+	video = processing.delay("input_video/abc.mp4")
+    # 등장인물 타임라인 
+	if video.ready() == True:
+		with open("list/appear_list.txt", "r", encoding="utf-8") as f:
+			global timeline
+			data = f.read()
+			timeline = eval(data)
+	
+		# DB저장
+		key = timeline.keys()
+		for i in key:
+			if i == 'harrypotter':
+				cid = 1
+			elif i == 'ron':
+				cid = 2
+			elif i == 'hermione':
+				cid = 3
+		
+			timeline_value = timeline[i]
+			val = []
+			for j in timeline_value:
+				start = strftime("%H:%M:%S", gmtime(j[0]))
+				end = strftime("%H:%M:%S", gmtime(j[1]))
+				val.append((cid,start,end))
+			print(val)
+			cursor = db.cursor()
+			sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
+			cursor.executemany(sql,val)
+			db.commit()
+			val.clear()
+			os.remove('list/appear_list.txt')		
 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
 
@@ -104,19 +88,6 @@ def post_video():
 		#영상 url
 		url = "https://{BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{filename}"
 		return jsonify(url)
-
-#DB 정보 받기
-@app.route('/getdb', methods = ['POST'])
-def get_db():
-	if request.method == 'POST':
-		cursor = db.cursor()
-		cursor.execute("""
-				SELECT name, 
-				img
-        		FROM gagagaga.characters
-				""")
-		result = cursor.fetchall()
-		return jsonify(result)
 
 @app.route('/getCharacter', methods = ['POST'])
 def get_Character():
