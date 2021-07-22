@@ -15,15 +15,15 @@ def get_db(path):
     detect = Detect_class(path)
     source = detect.get_source()
     db = detect.run()
-    
-    print('\n\n\n\n######################################### print from tasks - get_db #########################################################')
+
     print('\nsource_path: ', source)
     print('\ndb: ', db)
+    return db
     
 
 @celery.task
 def processing(url):
   #영상처리
-  example = "python ./yolov5/detect_test.py --source " + url + " --weights ./yolov5/best.pt"
-  os.system(example)
+  # example = "python ./yolov5/detect_test.py --source " + url + " --weights ./yolov5/best.pt"
+  # os.system(example)
   return 'hey'

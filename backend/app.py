@@ -39,40 +39,38 @@ def get_video():
 		filename = secure_filename(video_file.filename)
 		#video 폴더에 저장
 		video_file.save(os.path.join('./input_video', filename))
-
-	# 영상 처리
-	video = processing.delay("input_video/abc.mp4")
-    # 등장인물 타임라인 
-	if video.ready() == True:
-		with open("list/appear_list.txt", "r", encoding="utf-8") as f:
+		# 영상 처리
+		video = get_db.delay("input_video/abc.mp4")
+        # 등장인물 타임라인 
+		if video.ready() == True:
 			global timeline
-			data = f.read()
+			data = video.get()
 			timeline = eval(data)
 	
-		# DB저장
-		key = timeline.keys()
-		for i in key:
-			if i == 'harrypotter':
-				cid = 1
-			elif i == 'ron':
-				cid = 2
-			elif i == 'hermione':
-				cid = 3
+			# DB저장
+			key = timeline.keys()
+			for i in key:
+				if i == 'harrypotter':
+					cid = 1
+				elif i == 'ron':
+					cid = 2
+				elif i == 'hermione':
+					cid = 3
 		
-			timeline_value = timeline[i]
-			val = []
-			for j in timeline_value:
-				start = strftime("%H:%M:%S", gmtime(j[0]))
-				end = strftime("%H:%M:%S", gmtime(j[1]))
-				val.append((cid,start,end))
-			print(val)
-			cursor = db.cursor()
-			sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
-			cursor.executemany(sql,val)
-			db.commit()
-			val.clear()
-			os.remove('list/appear_list.txt')		
-		return jsonify({'success': True, 'file': 'Received', 'name': filename})
+				timeline_value = timeline[i]
+				val = []
+				for j in timeline_value:
+					start = strftime("%H:%M:%S", gmtime(j[0]))
+					end = strftime("%H:%M:%S", gmtime(j[1]))
+					val.append((cid,start,end))
+				print(val)
+				cursor = db.cursor()
+				sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
+				cursor.executemany(sql,val)
+				db.commit()
+				val.clear()
+	
+	return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
 
 #S3 버킷에 영상 저장
@@ -111,3 +109,52 @@ def get_Character():
 #서버 실행
 if __name__ == '__main__':
    app.run(port=5000, debug = True)
+
+
+
+
+
+   
+# # React -> Flask 파일 업로드 처리
+# @app.route('/fileUpload', methods = ['POST'])
+# def get_video():
+# 	if request.method == 'POST':
+# 		video_file = request.files['file']
+# 		#파일 안정성 확인
+# 		filename = secure_filename(video_file.filename)
+# 		#video 폴더에 저장
+# 		video_file.save(os.path.join('./input_video', filename))
+
+# 	# 영상 처리
+# 	video = processing.delay("input_video/abc.mp4")
+#     # 등장인물 타임라인 
+# 	if video.ready() == True:
+# 		with open("list/appear_list.txt", "r", encoding="utf-8") as f:
+# 			global timeline
+# 			data = f.read()
+# 			timeline = eval(data)
+	
+# 		# DB저장
+# 		key = timeline.keys()
+# 		for i in key:
+# 			if i == 'harrypotter':
+# 				cid = 1
+# 			elif i == 'ron':
+# 				cid = 2
+# 			elif i == 'hermione':
+# 				cid = 3
+		
+# 			timeline_value = timeline[i]
+# 			val = []
+# 			for j in timeline_value:
+# 				start = strftime("%H:%M:%S", gmtime(j[0]))
+# 				end = strftime("%H:%M:%S", gmtime(j[1]))
+# 				val.append((cid,start,end))
+# 			print(val)
+# 			cursor = db.cursor()
+# 			sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
+# 			cursor.executemany(sql,val)
+# 			db.commit()
+# 			val.clear()
+# 			os.remove('list/appear_list.txt')		
+# 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
