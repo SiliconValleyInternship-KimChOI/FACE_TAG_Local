@@ -1,11 +1,11 @@
+# file_structure_check.ipynb에서 yolo clone했을 때 생성되는 detection.py를 수정
+# confidence 일정 이하는 표시 x
+# 등장인물 연속 등장구간 저장
+
 """
 Run inference with a YOLOv5 model on images, videos, directories, streams
-Usage:
-$ python path/to/detect.py --source path/to/img.jpg --weights yolov5s.pt --img 640
+Usage:$ python3 ./yolov5/detect.py --source ./yolov5/data/img.jpg --weights ./yolov5/best.pt
 """
-# file_structure_check.ipynb에서 yolo clone했을 때 생성되는 detection.py를 수정 
-# confidence 일정 이하는 표시 x
-    # 등장인물 연속 등장구간 저장
 
 import argparse
 import sys
@@ -22,21 +22,43 @@ sys.path.append(FILE.parents[0].as_posix())  # add yolov5/ to path
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
 from utils.general import check_img_size, check_requirements, check_imshow, colorstr, non_max_suppression, \
-        apply_classifier, scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path, save_one_box
+    apply_classifier, scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path, save_one_box
 from utils.plots import colors, plot_one_box
-from utils.torch_utils import select_device, load_classifier, time_synchronized
+from utils.torch_utils import select_device, load_classifier, time_sync
 
-class detect_class(object):
+# connect aws s3 bucket
+import boto3
+# s3 bucket name
+bucket_name = 'dongheon97'
+s3 = boto3.client('s3')
+
+class Test(object):
     def __init__(self, source):
-        self.source = source
+        self._source = source
+    def get_source(self):
+        return self._source
+    def test_print(self):
+        path = self.get_source()
+        print(path)
 
+class Detect_class(object):
+    
+    # setter
+    def __init__(self, source):
+        self._source = source
+
+    # getter
+    def get_source(self):
+        return self._source
+    
     # calculate fps of input video
-    def get_fps(filename):
-        video = cv2.VideoCapture(filename)  
+    def get_fps(self, filename):
+        video = cv2.VideoCapture(filename)
         return video.get(cv2.CAP_PROP_FPS)
 
     @torch.no_grad()
-    def run(weights='yolov5s.pt',  # model.pt path(s)
+    def run(self,
+            weights='./yolov5/best.pt',  # model.pt path(s)
             source='data/images',  # file/dir/URL/glob, 0 for webcam
             imgsz=640,  # inference size (pixels)
             conf_thres=0.25,  # confidence threshold
@@ -53,28 +75,32 @@ class detect_class(object):
             augment=False,  # augmented inference
             visualize=False,  # visualize features
             update=False,  # update all models
-            project='runs/detect',  # save results to project/name
-            name='exp',  # save results to project/name
+            project='./output_video/',  # save results to project/name
+            name='output',  # save results to project/name
             exist_ok=False,  # existing project/name ok, do not increment
             line_thickness=3,  # bounding box thickness (pixels)
             hide_labels=False,  # hide labels
             hide_conf=False,  # hide confidences
             half=False,  # use FP16 half-precision inference
             ):
+        source = self.get_source()
         save_img = not nosave and not source.endswith('.txt')  # save inference images
-        webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
-            ('rtsp://', 'rtmp://', 'http://', 'https://'))
+        webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
 
         # check source's fps
-        video_fps = get_fps(source)
-        print('\ninput_video_fps: ', video_fps, '\n')
+        video_fps = self.get_fps(source)
+        #print('\ninput_video_fps: ', video_fps, '\n')
+
 
         # Directories
-        save_dir = increment_path(Path(project) / name,
-                              exist_ok=exist_ok)  # increment run
-        (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True,
-                                                          exist_ok=True)  # make dir
+        save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
+   
+        #print('\n save_dir ', save_dir, '\n')
 
+        (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+    
+        #print('\n save_dir ', save_dir, '\n')
+    
         # Initialize
         set_logging()
         device = select_device(device)
@@ -84,8 +110,7 @@ class detect_class(object):
         model = attempt_load(weights, map_location=device)  # load FP32 model
         stride = int(model.stride.max())  # model stride
         imgsz = check_img_size(imgsz, s=stride)  # check image size
-        names = model.module.names if hasattr(
-            model, 'module') else model.names  # get class names
+        names = model.module.names if hasattr(model, 'module') else model.names  # get class names
         if half:
             model.half()  # to FP16
 
@@ -93,8 +118,7 @@ class detect_class(object):
         classify = False
         if classify:
             modelc = load_classifier(name='resnet50', n=2)  # initialize
-            modelc.load_state_dict(torch.load('resnet50.pt', map_location=device)[
-                               'model']).to(device).eval()
+            modelc.load_state_dict(torch.load('resnet50.pt', map_location=device)['model']).to(device).eval()
 
         # Dataloader
         if webcam:
@@ -109,18 +133,18 @@ class detect_class(object):
 
         # Run inference
         if device.type != 'cpu':
-            model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(
-                next(model.parameters())))  # run once
+            model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))  # run once
         t0 = time.time()
+    
 
         # db: Store continuous appearance intervals for each character
         # tmp: store one continuous appearance interval temporarily
-        tmp = {
-            'harrypotter': [0, 0],
-            'hermione': [0, 0],
-            'ron': [0, 0],
+        tmp={
+            'harrypotter': [0,0],
+            'hermione':[0,0],
+            'ron': [0,0],
         }
-        db = {
+        db={
             'harrypotter': [],
             'hermione': [],
             'ron': [],
@@ -128,7 +152,7 @@ class detect_class(object):
 
         #th: frame threshold for determining continuous appearance
         #(th프레임 이상 등장해야 등장한 것으로 인정/ th프레임 내에 재등장하면 연속적 등장으로 인정 )
-        th = 0.25*video_fps
+        th= 0.25*video_fps
 
         for path, img, im0s, vid_cap in dataset:
             img = torch.from_numpy(img).to(device)
@@ -138,87 +162,75 @@ class detect_class(object):
                 img = img.unsqueeze(0)
 
             # Inference
-            t1 = time_synchronized()
+            t1 = time_sync()
             pred = model(img,
-                        augment=augment,
-                        visualize=increment_path(save_dir / Path(path).stem, mkdir=True) if visualize else False)[0]
+                         augment=augment,
+                         visualize=increment_path(save_dir / Path(path).stem, mkdir=True) if visualize else False)[0]
 
             # Apply NMS
-            pred = non_max_suppression(
-                pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
-            t2 = time_synchronized()
+            pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
+            t2 = time_sync()
 
             # Apply Classifier
             if classify:
                 pred = apply_classifier(pred, modelc, img, im0s)
-
-            #file for metadata
-            metadata = open('appear_list.txt', 'a')  # append mode
-            # init string for metadata
-            appearance = ''
-
+        
             # Process detections
             for i, det in enumerate(pred):  # detections per image
                 if webcam:  # batch_size >= 1
-                    p, s, im0, frame = path[i], f'{i}: ', im0s[i].copy(
-                    ), dataset.count
+                    p, s, im0, frame = path[i], f'{i}: ', im0s[i].copy(), dataset.count
                 else:
                     p, s, im0, frame = path, '', im0s.copy(), getattr(dataset, 'frame', 0)
 
                 p = Path(p)  # to Path
                 save_path = str(save_dir / p.name)  # img.jpg
-                txt_path = str(save_dir / 'labels' / p.stem) + \
-                    ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
+                txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
+
+                # s3 path
+                append_path = increment_path(Path(project) / p.name, exist_ok=exist_ok)
+                save_to_s3 = str(append_path / '')
+                #print('\nsave_to_s3: ', append_path, '\n')
+                #print('save_path: ', save_path)
+                #print('txt_path: ', txt_path, '\n')
+
                 s += '%gx%g ' % img.shape[2:]  # print string
-                # normalization gain whwh
-                gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]
+                gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
                 imc = im0.copy() if save_crop else im0  # for save_crop
                 if len(det):
                     # Rescale boxes from img_size to im0 size
-                    det[:, :4] = scale_coords(
-                        img.shape[2:], det[:, :4], im0.shape).round()
+                    det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
 
                     # Print results
                     for c in det[:, -1].unique():
                         n = (det[:, -1] == c).sum()  # detections per class
-                        # add to string
-                        s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "
-                        # input data append
-                        appearance += f"frame: {frame}, appear_time: {round(frame/video_fps, 2)}, actor: {names[int(c)]}, "
-
-                        if frame-tmp[names[int(c)]][1] < th:
-                            tmp[names[int(c)]][1] = frame
+                        s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string                   
+                    
+                        if frame-tmp[names[int(c)]][1]<th:
+                            tmp[names[int(c)]][1]=frame
 
                         else:
-                            if tmp[names[int(c)]][1]-tmp[names[int(c)]][0] > th:
-                                db[names[int(c)]].append([round(tmp[names[int(c)]][0]/video_fps), round(tmp[names[int(c)]][1]/video_fps)])
-                            tmp[names[int(c)]][0] = frame
-                            tmp[names[int(c)]][1] = frame
+                            if tmp[names[int(c)]][1]-tmp[names[int(c)]][0]>th:
+                                db[names[int(c)]].append([round(tmp[names[int(c)]][0]/video_fps),round(tmp[names[int(c)]][1]/video_fps)])
+                            tmp[names[int(c)]][0]=frame
+                            tmp[names[int(c)]][1]=frame
+
 
                     # Write results
                     for *xyxy, conf, cls in reversed(det):
                         if save_txt:  # Write to file
-                            xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)
-                                            ) / gn).view(-1).tolist()  # normalized xywh
-                            # label format
-                            line = (cls, *xywh, conf) if save_conf else (cls, *xywh)
+                            xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
+                            line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
                             with open(txt_path + '.txt', 'a') as f:
                                 f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
                         if save_img or save_crop or view_img:  # Add bbox to image
-                            if conf > 0.5:  # detection threshold : conf
+                            if conf>0.5: # detection threshold : conf
                                 c = int(cls)  # integer class
-                                label = None if hide_labels else (
-                                    names[c] if hide_conf else f'{names[c]} {conf:.2f}')
-                                plot_one_box(xyxy, im0, label=label, color=colors(
-                                    c, True), line_thickness=line_thickness)
+                                label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
+                                plot_one_box(xyxy, im0, label=label, color=colors(c, True), line_thickness=line_thickness)
                                 if save_crop:
-                                    save_one_box(
-                                        xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
-
-                                # append to appear_list.txt
-                                metadata.write(appearance + '\n')
-
+                                    save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
+                            
                 # Print time (inference + NMS)
                 print(f'{s}Done. ({t2 - t1:.3f}s)')
 
@@ -235,8 +247,7 @@ class detect_class(object):
                         if vid_path[i] != save_path:  # new video
                             vid_path[i] = save_path
                             if isinstance(vid_writer[i], cv2.VideoWriter):
-                                # release previous video writer
-                                vid_writer[i].release()
+                                vid_writer[i].release()  # release previous video writer
                             if vid_cap:  # video
                                 fps = vid_cap.get(cv2.CAP_PROP_FPS)
                                 w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -244,12 +255,11 @@ class detect_class(object):
                             else:  # stream
                                 fps, w, h = 30, im0.shape[1], im0.shape[0]
                                 save_path += '.mp4'
-                            vid_writer[i] = cv2.VideoWriter(
-                                save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+                            vid_writer[i] = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                         vid_writer[i].write(im0)
         for name in db:
-            if tmp[name][1]-tmp[name][0] > th:
-                db[name].append([round(tmp[name][0]/video_fps), round(tmp[name][1]/video_fps)])
+            if tmp[name][1]-tmp[name][0]>th:
+                db[name].append([round(tmp[name][0]/video_fps),round(tmp[name][1]/video_fps)])
 
         if save_txt or save_img:
             s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
@@ -257,18 +267,24 @@ class detect_class(object):
 
         if update:
             strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
-
+    
+        # video to s3 bucket 
+        #s3.upload_file(save_path, bucket_name, save_to_s3)
+    
         #metadata.close()
         print(f'Done. ({time.time() - t0:.3f}s)')
+    
+        # file for metadata 
+        metadata = open('./list/timeline.txt', 'a') # append mode
+        metadata.write(str(db))
 
         print(db)
         return db
 
-
-    def parse_opt():
+    def parse_opt(self):
         parser = argparse.ArgumentParser()
-        parser.add_argument('--weights', nargs='+', type=str, default='yolov5s.pt', help='model.pt path(s)')
-        parser.add_argument('--source', type=str, default='data/images', help='file/dir/URL/glob, 0 for webcam')
+        parser.add_argument('--weights', nargs='+', type=str, default='./yolov5/best.pt', help='model.pt path(s)')
+        parser.add_argument('--source', type=str, default=get_source(), help='file/dir/URL/glob, 0 for webcam')
         parser.add_argument('--imgsz', '--img', '--img-size', type=int, default=640, help='inference size (pixels)')
         parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
         parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
@@ -284,8 +300,8 @@ class detect_class(object):
         parser.add_argument('--augment', action='store_true', help='augmented inference')
         parser.add_argument('--visualize', action='store_true', help='visualize features')
         parser.add_argument('--update', action='store_true', help='update all models')
-        parser.add_argument('--project', default='runs/detect', help='save results to project/name')
-        parser.add_argument('--name', default='exp', help='save results to project/name')
+        parser.add_argument('--project', default='./output_video', help='save results to project/name')
+        parser.add_argument('--name', default='output', help='save results to project/name')
         parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
         parser.add_argument('--line-thickness', default=3, type=int, help='bounding box thickness (pixels)')
         parser.add_argument('--hide-labels', default=False, action='store_true', help='hide labels')
@@ -294,7 +310,10 @@ class detect_class(object):
         opt = parser.parse_args()
         return opt
 
-    def main(opt):
+    def main(self, opt):
         print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
-        check_requirements(exclude=('tensorboard', 'thop'))
+        #check_requirements(exclude=('tensorboard', 'thop'))
         run(**vars(opt))
+
+
+

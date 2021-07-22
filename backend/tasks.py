@@ -2,13 +2,35 @@
 # Redis  3.5.3
 # Python 3.8.8
 from celery import Celery
-from yolov5.detect import detect_class
+#from yolov5.detect import detect_class
+
+from yolov5.detect import Detect_class
+from yolov5.detect import Test
+
 
 # Message Broker => Redis
 BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 celery = Celery('tasks', broker=BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
+
+@celery.task
+def get_source(path):
+    test = Test(path)
+    print_test = test.test_print()
+    
+
+@celery.task
+def get_db(path):
+    detect = Detect_class(path)
+    source = detect.get_source()
+    db = detect.run()
+    
+    print('\n\n\n\n######################################### print from tasks - get_db #########################################################')
+    print('\nsource_path: ', source)
+    print('\ndb: ', db)
+    
+'''
 # practical
 @celery.task
 def processing():
@@ -19,8 +41,16 @@ def processing():
   #test = detect_class("./yolov5/best.pt","video/abc.mp4")
   #timeline = test.main()
   #print(timeline)
+'''
 
 # test
 @celery.task
 def add(x,y):
   return x + y
+
+
+
+
+
+
+
