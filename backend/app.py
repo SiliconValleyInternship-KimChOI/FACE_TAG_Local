@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, abort
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
-from flask import abort
 # Celery 속 코드 가져오기
-from tasks import celery, processing, get_db
+from tasks import celery, processing
+# db 연동
 import pymysql
 import pandas as pd
 import os
@@ -40,37 +40,44 @@ def get_video():
 		#video 폴더에 저장
 		video_file.save(os.path.join('./input_video', filename))
 		# 영상 처리
-		video = get_db.delay("input_video/abc.mp4")
+		video = processing.delay("input_video/10sec.mp4")
         # 등장인물 타임라인 
-		if video.ready() == True:
-			global timeline
-			data = video.get()
-			timeline = eval(data)
+		global timeline
+		data = str(video.get())
+		timeline = eval(data)
+		print(timeline)
 	
-			# DB저장
-			key = timeline.keys()
-			for i in key:
-				if i == 'harrypotter':
-					cid = 1
-				elif i == 'ron':
-					cid = 2
-				elif i == 'hermione':
-					cid = 3
-		
-				timeline_value = timeline[i]
-				val = []
-				for j in timeline_value:
-					start = strftime("%H:%M:%S", gmtime(j[0]))
-					end = strftime("%H:%M:%S", gmtime(j[1]))
-					val.append((cid,start,end))
-				print(val)
-				cursor = db.cursor()
-				sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
-				cursor.executemany(sql,val)
-				db.commit()
-				val.clear()
+		# DB저장
+		insertTimeline(timeline)
 	
 	return jsonify({'success': True, 'file': 'Received', 'name': filename})
+
+
+def insertTimeline(timeline):
+	# DB저장
+	key = timeline.keys()
+	print(key)
+	for i in key:
+		if i == 'harrypotter':
+			cid = 1
+		elif i == 'ron':
+			cid = 2
+		elif i == 'hermione':
+			cid = 3
+
+		timeline_value = timeline[i]
+		val = []
+		for j in timeline_value:
+			start = strftime("%H:%M:%S", gmtime(j[0]))
+			end = strftime("%H:%M:%S", gmtime(j[1]))
+			val.append((cid,start,end))
+		print(val)
+		cursor = db.cursor()
+		sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
+		cursor.executemany(sql,val)
+		db.commit()
+		val.clear()
+	return 'Timeline update'
 
 
 #S3 버킷에 영상 저장
@@ -114,47 +121,32 @@ if __name__ == '__main__':
 
 
 
-   
-# # React -> Flask 파일 업로드 처리
-# @app.route('/fileUpload', methods = ['POST'])
-# def get_video():
-# 	if request.method == 'POST':
-# 		video_file = request.files['file']
-# 		#파일 안정성 확인
-# 		filename = secure_filename(video_file.filename)
-# 		#video 폴더에 저장
-# 		video_file.save(os.path.join('./input_video', filename))
-
-# 	# 영상 처리
-# 	video = processing.delay("input_video/abc.mp4")
-#     # 등장인물 타임라인 
-# 	if video.ready() == True:
-# 		with open("list/appear_list.txt", "r", encoding="utf-8") as f:
-# 			global timeline
-# 			data = f.read()
-# 			timeline = eval(data)
+        # # 등장인물 타임라인 
+		# if video.ready() == 'True':
+		# 	global timeline
+		# 	data = video.get()
+		# 	timeline = eval(data)
+		# 	print(timeline)
 	
-# 		# DB저장
-# 		key = timeline.keys()
-# 		for i in key:
-# 			if i == 'harrypotter':
-# 				cid = 1
-# 			elif i == 'ron':
-# 				cid = 2
-# 			elif i == 'hermione':
-# 				cid = 3
+		# 	# DB저장
+		# 	key = timeline.keys()
+		# 	for i in key:
+		# 		if i == 'harrypotter':
+		# 			cid = 1
+		# 		elif i == 'ron':
+		# 			cid = 2
+		# 		elif i == 'hermione':
+		# 			cid = 3
 		
-# 			timeline_value = timeline[i]
-# 			val = []
-# 			for j in timeline_value:
-# 				start = strftime("%H:%M:%S", gmtime(j[0]))
-# 				end = strftime("%H:%M:%S", gmtime(j[1]))
-# 				val.append((cid,start,end))
-# 			print(val)
-# 			cursor = db.cursor()
-# 			sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
-# 			cursor.executemany(sql,val)
-# 			db.commit()
-# 			val.clear()
-# 			os.remove('list/appear_list.txt')		
-# 		return jsonify({'success': True, 'file': 'Received', 'name': filename})
+		# 		timeline_value = timeline[i]
+		# 		val = []
+		# 		for j in timeline_value:
+		# 			start = strftime("%H:%M:%S", gmtime(j[0]))
+		# 			end = strftime("%H:%M:%S", gmtime(j[1]))
+		# 			val.append((cid,start,end))
+		# 		print(val)
+		# 		cursor = db.cursor()
+		# 		sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
+		# 		cursor.executemany(sql,val)
+		# 		db.commit()
+		# 		val.clear()
