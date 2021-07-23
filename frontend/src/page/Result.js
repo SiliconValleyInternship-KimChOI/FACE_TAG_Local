@@ -64,13 +64,13 @@ const Result= (props) => {
             <Img src={Logo} alt = 'logo' />
             </Link>
             <Box>
-            {Loading ? <Text>동영상 인물 태깅 중...</Text>:<Text>동영상 인물 태깅 완료!</Text>}
+            {loading ? <Text>동영상 인물 태깅 중...</Text>:<Text>동영상 인물 태깅 완료!</Text>}
             </Box>
              <Box>
-             {Loading ? <Loading/> : <ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>}
+             {loading ? <Loading/> : <ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>}
             </Box>
             <br/>
-             {Loading ? <Loading/> : <Timeline data={data}/>}             
+             {loading ? <Loading/> : <Timeline data={data}/>}             
         </Container>
     )
   };

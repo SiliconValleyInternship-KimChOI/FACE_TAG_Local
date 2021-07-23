@@ -76,39 +76,36 @@ def post_video():
 		#파일 이름 가져오기
 		file_list = os.listdir(app.config['UPLOAD_FOLDER'])
 		filename = "".join(file_list)
-		# 영상 + 소리 처리
-		audioclip=VideoFileClip('./input_video/'+filename).audio #오디오 받기d
+		# 영상 처리
+		audioclip=VideoFileClip('./input_video/'+filename).audio #오디오 받기
 		video = processing.delay(app.config['UPLOAD_FOLDER']+filename) #영상 처리
-		if (video.ready() == True):
-			print('ready!')
-			print(video)
-			videoclip=VideoFileClip('./output_video/output/'+filename)
-			videoclip.audio=audioclip
-			videoclip.write_videofile(video_path+filename) 
-			print('Video all Successed')
-			#S3 버킷에 영상 저장
-			s3 = s3_connection()
-			s3.upload_file(video_path+filename, BUCKET_NAME, filename)
-			#영상 url
-			url = "https://"+ BUCKET_NAME +".s3.ap-northeast-2.amazonaws.com/" + filename
 
-        # # 등장인물 타임라인 DB 저장
-		# global timeline
-		# data = str(video.get())
-		# timeline = eval(data)
-		# #print(timeline)
-		# insertTimeline(timeline)
 
-		# cursor = db.cursor()
-		# #timeline 가져오기
-		# sql = '''
-		# SELECT name,img,start,end from characters 
-		# RIGHT JOIN timeline ON characters.id = timeline.cid
-		# ORDER BY name, start;'''
-		# cursor.execute(sql)
-		# result = cursor.fetchall()
-		url = "https://music.youtube.com/playlist?list=PL81LNl3xHb8AQa7jUuBvGDobyem8w24QM"
-		result = [['harrypotter','da']]
+        # 등장인물 타임라인 DB 저장
+		global timeline
+		data = str(video.get())
+		timeline = eval(data)
+		#print(timeline)
+		insertTimeline(timeline)
+
+        # 영상 소리 처리
+		videoclip=VideoFileClip('./output_video/output/'+filename)
+		videoclip.audio=audioclip
+		videoclip.write_videofile(video_path+filename) 
+		# S3 버킷에 영상 저장
+		s3 = s3_connection()
+		s3.upload_file(video_path+filename, BUCKET_NAME, filename)
+	    # 영상 url
+		url = "https://"+ BUCKET_NAME +".s3.ap-northeast-2.amazonaws.com/" + filename
+		
+		#timeline 출력
+		cursor = db.cursor()
+		sql = '''
+		SELECT name,img,start,end from characters 
+		RIGHT JOIN timeline ON characters.id = timeline.cid
+		ORDER BY name, start;'''
+		cursor.execute(sql)
+		result = cursor.fetchall()
 		return jsonify({'url': url, 'timeline' : result})
 
 #서버 실행
