@@ -1,17 +1,26 @@
 # Celery  5.1.2
 # Redis  3.5.3
 # Python 3.8.8
+# Windows : celery -A tasks worker --pool=solo -l info
 
 from celery import Celery
+from yolov5.detect import Detect_class
 
-# detect.py
-import yolov5.detect as detect
-
-
+# Message Broker => Redis
 BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-app = Celery('tasks', broker=BROKER_URL, backend=CELERY_RESULT_BACKEND)
+celery = Celery('tasks', broker=BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
-@app.task
-def add(x, y):
-  return x + y
+@celery.task
+def processing(path):
+  detect = Detect_class(path)
+  timeline = detect.run()
+  print('\nTimeline: ', timeline)
+  return timeline
+
+# @celery.task
+# def processing(url):
+#   #영상처리
+#   # example = "python ./yolov5/detect_test.py --source " + url + " --weights ./yolov5/best.pt"
+#   # os.system(example)
+#   return 'hey'
