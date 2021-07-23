@@ -39,17 +39,13 @@ def get_video():
 		filename = secure_filename(video_file.filename)
 		# video 폴더에 저장
 		video_file.save(os.path.join('./input_video', filename))
-		# 소리 합성을 위해
-		global audioclip
-		audioclip = VideoFileClip("./input_video/"+filename).audio #오디오 받기
-
 	return jsonify({'success': True, 'file': 'Received', 'name': filename})
 
 # DB저장
 def insertTimeline(timeline):
 	# Timeline table 전에 저장된 정보 삭제
 	cursor = db.cursor()
-	sql = '''TRUNCATE TABLE timeline;'''
+	sql = '''TRUNCATE timeline;'''
 	cursor.execute(sql)
 	key = timeline.keys()
 	for i in key:
@@ -81,72 +77,37 @@ def post_video():
 		file_list = os.listdir(app.config['UPLOAD_FOLDER'])
 		filename = "".join(file_list)
 		# 영상 처리
-		video = processing.delay(app.config['UPLOAD_FOLDER']+filename)
-        # 등장인물 타임라인 
+		audioclip=VideoFileClip('./input_video/'+filename).audio #오디오 받기
+		video = processing.delay(app.config['UPLOAD_FOLDER']+filename) #영상 처리
+
+
+        # 등장인물 타임라인 DB 저장
 		global timeline
 		data = str(video.get())
 		timeline = eval(data)
-		print(timeline)
-		# DB저장
+		#print(timeline)
 		insertTimeline(timeline)
 
-		# 소리 합치기
-		videoclip = VideoFileClip(video_path+"output/"+filename)
-		videoclip.audio=audioclip  #아웃풋 동영상에 오디오 씌우기
-		videoclip.write_videofile(video_path+"output/"+filename) #아웃풋 동영상 덮어쓰기
-
-
-		#S3 버킷에 영상 저장
+        # 영상 소리 처리
+		videoclip=VideoFileClip('./output_video/output/'+filename)
+		videoclip.audio=audioclip
+		videoclip.write_videofile(video_path+filename) 
+		# S3 버킷에 영상 저장
 		s3 = s3_connection()
 		s3.upload_file(video_path+filename, BUCKET_NAME, filename)
-		#영상 url
-		url = "https://{BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{filename}"
-		return jsonify(url)
-
-@app.route('/getCharacter', methods = ['POST'])
-def get_Character():
-	if request.method == 'POST':
+	    # 영상 url
+		url = "https://"+ BUCKET_NAME +".s3.ap-northeast-2.amazonaws.com/" + filename
+		
+		#timeline 출력
 		cursor = db.cursor()
-		#timeline 가져오기
 		sql = '''
 		SELECT name,img,start,end from characters 
 		RIGHT JOIN timeline ON characters.id = timeline.cid
 		ORDER BY name, start;'''
 		cursor.execute(sql)
 		result = cursor.fetchall()
-		return jsonify(result)	
+		return jsonify({'url': url, 'timeline' : result})
 
 #서버 실행
 if __name__ == '__main__':
    app.run(port=5000, debug = True)
-
-
-        # # 등장인물 타임라인 
-		# if video.ready() == 'True':
-		# 	global timeline
-		# 	data = video.get()
-		# 	timeline = eval(data)
-		# 	print(timeline)
-	
-		# 	# DB저장
-		# 	key = timeline.keys()
-		# 	for i in key:
-		# 		if i == 'harrypotter':
-		# 			cid = 1
-		# 		elif i == 'ron':
-		# 			cid = 2
-		# 		elif i == 'hermione':
-		# 			cid = 3
-		
-		# 		timeline_value = timeline[i]
-		# 		val = []
-		# 		for j in timeline_value:
-		# 			start = strftime("%H:%M:%S", gmtime(j[0]))
-		# 			end = strftime("%H:%M:%S", gmtime(j[1]))
-		# 			val.append((cid,start,end))
-		# 		print(val)
-		# 		cursor = db.cursor()
-		# 		sql = "INSERT INTO timeline(cid,start,end) VALUES (%s, %s, %s);"
-		# 		cursor.executemany(sql,val)
-		# 		db.commit()
-		# 		val.clear()
