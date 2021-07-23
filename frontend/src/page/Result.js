@@ -48,35 +48,30 @@ const Result= (props) => {
       // video
       axios.post('http://localhost:5000/fileDown', filename).then(response=>{
       console.log(response.data);
-      setUploadedurl(response.data);
+      // console.log(response.data.url);
+      // console.log(response.data.timeline);
+      setUploadedurl(response.data.url);
       setControlState(true);
-    });
-
-      // character timeline
-      var index = new FormData();
-      axios.post('http://localhost:5000/getCharacter', index)
-        .then(response =>{
-          //console.log(response.data);
-          setData(response.data);
-          setLoading(false);})
-        .catch(error=>{console.log(error);})
-    },[]);
-
+      setData(response.data.timeline);
+      setLoading(false);
+    }).catch(error=>{
+      console.log(error);
+      setLoading(true);
+    });},[]);
     return(
         <Container>
             <Link to = '/'>
             <Img src={Logo} alt = 'logo' />
             </Link>
             <Box>
-            {loading ? <Text>동영상 인물 태깅 중...</Text>:<Text>동영상 인물 태깅 완료!</Text>}
+            {Loading ? <Text>동영상 인물 태깅 중...</Text>:<Text>동영상 인물 태깅 완료!</Text>}
             </Box>
              <Box>
-             {loading ? <Loading/> :<ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>}
-            </Box> 
+             {Loading ? <Loading/> : <ReactPlayer url={uploadedurl} height='300px' controls={controlState}/>}
+            </Box>
             <br/>
-            {loading ? <Loading/> : <Timeline data={data}/>}
+             {Loading ? <Loading/> : <Timeline data={data}/>}             
         </Container>
     )
   };
-
 export default Result;
