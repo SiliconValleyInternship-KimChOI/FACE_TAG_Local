@@ -8,10 +8,21 @@ import Dropzone from 'react-dropzone';   //file upload
 import axios from 'axios';               //post
 import Loading from './Loading';
 
+const VideoBox = styled.div`
+width:50%;
+height:100%;
+margin-top:5%;
+float: left;
+`
+const BtnBox = styled.div`
+width:50%;
+height:100%;
+float: left;
+`
 const SelectBtn = styled.button`
-    width: 48%;
+    width: 50%;
     height: 50%;
-    margin : 2%;
+    margin: 30% 0% 0% 50%;
     color: white;
     font-size: 3em;
     background-color: black;
@@ -31,12 +42,12 @@ const SelectBtn = styled.button`
     }
 `
 const UploadBtn = styled.button`
-    width: 120%;
+    width: 50%;
     height: 50%;
-    margin : 2%;
-    color: white;
+    margin: 10% 0% 0% 50%;
+    color: #C3C3C3;
     font-size: 3em ;
-    background-color: black;
+    background-color: white;
     border: 0px;
     border-radius: 15px;
     text-align: center;
@@ -51,15 +62,6 @@ const UploadBtn = styled.button`
         top:2px;
     }
 `
-const Box = styled.div`
-    width:100%;
-    height:50%;
-    border: 0px;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-`
-
 const VideoUpload = () => {
     const [uploadedurl, setUploadedurl] = useState(null);  //video url
     const [controlState, setControlState] = useState(false); //video control
@@ -88,30 +90,25 @@ const VideoUpload = () => {
 
     return (
         <div>
+            <VideoBox>
             <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
-            {loading ? <Loading/> : <p>{name}</p>}
-            <Form  onSubmit>
-                <Box>
-                    <Dropzone
-                        accept='video/*'
-                        onDrop={onDrop}
-                        multiple={false}    // 한번에 파일을 2개 이상 올릴건지
-                        maxSize={100000000}    // 최대 사이즈 
-                    >
-                    {({getRootProps, getInputProps}) => (
-                        <SelectBtn {...getRootProps()}>
-                        파일 선택
-                        <input {...getInputProps()} />
-                        </SelectBtn >
-                    )}
-                    </Dropzone>
+            {loading ? <Loading/> : <p></p>}
+            </VideoBox>
 
-                    {/* <div><UploadBtn>동영상 업로드</UploadBtn></div> */}
-                    <Link to = {{pathname: llink, aboutProps: {name}}}>
-                    <UploadBtn>동영상 업로드</UploadBtn>
-                    </Link>
-                </Box>
-            </Form>
+            <BtnBox>
+            <Form onSubmit>
+                <Dropzone
+                    accept='video/*'
+                    onDrop={onDrop}
+                    multiple={false}    // 한번에 파일을 2개 이상 올릴건지
+                    maxSize={100000000}    // 최대 사이즈 
+                    >
+                {({getRootProps, getInputProps}) => (
+                <SelectBtn {...getRootProps()}>파일 선택<input {...getInputProps()} /></SelectBtn >)}
+                </Dropzone>
+            <Link to = {{pathname: llink, aboutProps: {name}}}><UploadBtn>인물 태깅</UploadBtn></Link>
+            </Form> 
+            </BtnBox>
         </div>
     );
 }
