@@ -2,7 +2,7 @@
 # Redis  3.5.3
 # Python 3.8.8
 # Windows : celery -A tasks worker --pool=solo -l info
-
+# Mac : celery -A tasks worker --loglevel=info 
 from celery import Celery
 from yolov5.detect import Detect_class
 
@@ -17,10 +17,3 @@ def processing(path):
   timeline = detect.run()
   print('\nTimeline: ', timeline)
   return timeline
-
-# @celery.task
-# def processing(url):
-#   #영상처리
-#   # example = "python ./yolov5/detect_test.py --source " + url + " --weights ./yolov5/best.pt"
-#   # os.system(example)
-#   return 'hey'

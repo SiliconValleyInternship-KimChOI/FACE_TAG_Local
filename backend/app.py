@@ -14,6 +14,7 @@ from moviepy.editor import *
 # connection.py
 from connection import s3_connection, BUCKET_NAME
 import boto3
+import shutil
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './input_video/'
@@ -97,7 +98,6 @@ def post_video():
 		s3.upload_file(video_path+filename, BUCKET_NAME, filename)
 	    # 영상 url
 		url = "https://"+ BUCKET_NAME +".s3.ap-northeast-2.amazonaws.com/" + filename
-		
 		#timeline 출력
 		cursor = db.cursor()
 		sql = '''
@@ -106,6 +106,9 @@ def post_video():
 		ORDER BY name, start;'''
 		cursor.execute(sql)
 		result = cursor.fetchall()
+
+		# os.remove(app.config['UPLOAD_FOLDER']+filename)
+		# shutil.rmtree(video_path+'output')
 		return jsonify({'url': url, 'timeline' : result})
 
 #서버 실행
