@@ -26,20 +26,6 @@ from utils.general import check_img_size, check_requirements, check_imshow, colo
 from utils.plots import colors, plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_sync
 
-# connect aws s3 bucket
-import boto3
-# s3 bucket name
-bucket_name = 'dongheon97'
-s3 = boto3.client('s3')
-
-class Test(object):
-    def __init__(self, source):
-        self._source = source
-    def get_source(self):
-        return self._source
-    def test_print(self):
-        path = self.get_source()
-        print(path)
 
 class Detect_class(object):
     
@@ -76,7 +62,7 @@ class Detect_class(object):
             visualize=False,  # visualize features
             update=False,  # update all models
             project='./output_video/',  # save results to project/name
-            name='output',  # save results to project/name
+            name='',  # save results to project/name
             exist_ok=False,  # existing project/name ok, do not increment
             line_thickness=3,  # bounding box thickness (pixels)
             hide_labels=False,  # hide labels
@@ -93,14 +79,11 @@ class Detect_class(object):
 
 
         # Directories
-        save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
-   
-        #print('\n save_dir ', save_dir, '\n')
+		#save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
+		#(save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+        save_dir = project
+        print('\n save_dir ', save_dir, '\n')
 
-        (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
-    
-        #print('\n save_dir ', save_dir, '\n')
-    
         # Initialize
         set_logging()
         device = select_device(device)
@@ -136,7 +119,6 @@ class Detect_class(object):
             model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))  # run once
         t0 = time.time()
     
-
         # db: Store continuous appearance intervals for each character
         # tmp: store one continuous appearance interval temporarily
         tmp={
@@ -183,15 +165,10 @@ class Detect_class(object):
                     p, s, im0, frame = path, '', im0s.copy(), getattr(dataset, 'frame', 0)
 
                 p = Path(p)  # to Path
-                save_path = str(save_dir / p.name)  # img.jpg
-                txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
-
-                # s3 path
-                append_path = increment_path(Path(project) / p.name, exist_ok=exist_ok)
-                save_to_s3 = str(append_path / '')
-                #print('\nsave_to_s3: ', append_path, '\n')
-                #print('save_path: ', save_path)
-                #print('txt_path: ', txt_path, '\n')
+                save_path = str(increment_path(Path(save_dir) / p.name))
+                txt_path = str(increment_path(Path(save_dir) / "labels" / p.stem)) 
+                #save_path = str(save_dir / p.name)  # img.jpg
+                #txt_path = str(save_dir / "labels" / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
 
                 s += '%gx%g ' % img.shape[2:]  # print string
                 gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
@@ -268,16 +245,8 @@ class Detect_class(object):
         if update:
             strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
     
-        # video to s3 bucket 
-        #s3.upload_file(save_path, bucket_name, save_to_s3)
-    
-        #metadata.close()
         print(f'Done. ({time.time() - t0:.3f}s)')
     
-        # file for metadata 
-        metadata = open('./list/timeline.txt', 'a') # append mode
-        metadata.write(str(db))
-
         print(db)
         return db
 
