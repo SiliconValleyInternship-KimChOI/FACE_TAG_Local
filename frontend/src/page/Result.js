@@ -5,7 +5,8 @@ import axios from 'axios';
 import Logo from '../css/logo.png';
 import Banner from '../css/banner.png'
 import {Link} from 'react-router-dom';
-import VideoTimeline from '../component/VideoTimeline';
+import ReactPlayer from 'react-player';
+import Timeline from '../component/Timeline';
 import Loading from '../component/Loading';
 
 const Header = styled.div`
@@ -24,6 +25,18 @@ margin:0%;
 display:flex;
 align-items:center;
 justify-content:center;
+`
+const VideoBox = styled.div`
+margin-left:10%;
+width:40%;
+height:100%;
+float: left;
+`
+const TimeBox = styled.div`
+margin-left:10%;
+width: 40%;
+height:100%;
+float: left;
 `
 const Text = styled.p`
 color: black;
@@ -51,12 +64,14 @@ const Result= (props) => {
   const [loading,setLoading] = useState(true);
   const [data,setData] = useState(null); //db -> name, image, timeline
   const [uploadedurl, setUploadedurl] = useState(null);  //video url
+  const [controlState, setControlState] = useState(false); //video control
 
     useEffect (() => {
       // video
       axios.post('http://localhost:5000/fileDown', filename).then(response=>{
       console.log(response.data);
       setUploadedurl(response.data.url);
+      setControlState(true);
       setData(response.data.timeline);
       setLoading(false);
     }).catch(error=>{
@@ -73,7 +88,13 @@ const Result= (props) => {
           <Body>
           {loading ? <Text>동영상 인물 태깅 중...</Text> : <Text>동영상 인물 태깅 완료!</Text>}
             <Box>
-            {loading ? <Loading/> : <div><VideoTimeline data={data} url={uploadedurl}/></div>}
+            {loading ? <Loading/> : 
+            <div>
+              <VideoBox>
+                <ReactPlayer url={uploadedurl} height='50%' width='100%' controls={controlState}/>
+                </VideoBox>
+              <TimeBox><Timeline data={data}/></TimeBox>
+             </div>}
             </Box>  
           </Body>         
         </div>
