@@ -9,59 +9,77 @@ import axios from 'axios';               //post
 import Loading from './Loading';
 
 const VideoBox = styled.div`
-width:50%;
-height:100%;
-margin-top:5%;
+border: 3px solid #DCDCDC;
+background: white;
+padding:2%;
 float: left;
+@media only screen and (min-width: 1300px) {
+    width:850px;
+    height:500px;
+    margin:50px 15px 40px 0;
+}
+@media only screen and (max-width: 1300px) {   
+    width: 95%;
+    margin:30px 0 0 0;
+}
 `
 const BtnBox = styled.div`
-width:50%;
-height:100%;
+border: 3px solid #DCDCDC;
+background: white;
+padding:2%;
 float: left;
+width:400px;
+@media only screen and (min-width: 1300px) {
+    height:500px;
+    margin:50px 0 40px 15px;
+}
+@media only screen and (max-width: 1300px) {
+    margin:30px 0 40px 0;
+}
 `
+const Div = styled.div`
+display:flex;    
+justify-content: center;
+align-items: center;
+@media only screen and (max-width: 1300px) {
+    flex-direction: column;
+    width:100%;
+}
+`
+
 const SelectBtn = styled.button`
-    width: 50%;
-    height: 50%;
-    margin: 30% 0% 0% 50%;
+    width: 300px;
+    height: 60px;
     color: white;
-    font-size: 3em;
-    background-color: black;
-    border: 0px;
+    font-size: 1em;
+    margin: 0 0 15px 0;
+    background-color: #DCDCDC;
+    border: 3px solid #DCDCDC;
     border-radius: 15px;
     text-align: center;
     text-decoration-line: none;
-    font-family: 'Do Hyeon';
-    box-shadow: 1px 4px 0 rgb(0,0,0,0.5);
+    font-family: 'NanumSquare', sans-serif;
     &:hover{
         background: var(--button-hover-bg-color, #404040);
-    }
-    &:active {
-        box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
-        position: relative;
-        top:2px;
     }
 `
 const UploadBtn = styled.button`
-    width: 50%;
-    height: 50%;
-    margin: 10% 0% 0% 50%;
+    width: 300px;
+    height: 60px;
     color: #C3C3C3;
-    font-size: 3em ;
+    font-size: 1em;
+    margin: 0 0 15px 0;
     background-color: white;
-    border: 0px;
+    border: 3px solid #DCDCDC;
     border-radius: 15px;
     text-align: center;
-    font-family: 'Do Hyeon';
-    box-shadow: 1px 4px 0 rgb(0,0,0,0.5);
+    font-family: 'NanumSquare', sans-serif;
     &:hover{
         background: var(--button-hover-bg-color, #404040);
     }
-    &:active {
-        box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
-        position: relative;
-        top:2px;
-    }
 `
+
+
 const VideoUpload = () => {
     const [uploadedurl, setUploadedurl] = useState(null);  //video url
     const [controlState, setControlState] = useState(false); //video control
@@ -89,27 +107,30 @@ const VideoUpload = () => {
     }
 
     return (
-        <div>
+        <Div>
             <VideoBox>
-            <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
-            {loading ? <Loading/> : <p></p>}
+                <div className="title">Video</div>
+                <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
+                {loading ? <Loading/> : <p></p>}
             </VideoBox>
-
             <BtnBox>
-            <Form onSubmit>
-                <Dropzone
-                    accept='video/*'
-                    onDrop={onDrop}
-                    multiple={false}    // 한번에 파일을 2개 이상 올릴건지
-                    maxSize={100000000}    // 최대 사이즈 
-                    >
-                {({getRootProps, getInputProps}) => (
-                <SelectBtn {...getRootProps()}>파일 선택<input {...getInputProps()} /></SelectBtn >)}
-                </Dropzone>
-            <Link to = {{pathname: llink, aboutProps: {name}}}><UploadBtn>인물 태깅</UploadBtn></Link>
-            </Form> 
+                <div className="title">Upload</div>
+                <div className="button">
+                <Form onSubmit>
+                    <Dropzone
+                        accept='video/*'
+                        onDrop={onDrop}
+                        multiple={false}    // 한번에 파일을 2개 이상 올릴건지
+                        maxSize={100000000}    // 최대 사이즈 
+                        >
+                    {({getRootProps, getInputProps}) => (
+                    <SelectBtn {...getRootProps()}>파일 선택<input {...getInputProps()} /></SelectBtn >)}
+                    </Dropzone>
+                <Link to = {{pathname: llink, aboutProps: {name}}}><UploadBtn>인물 태깅</UploadBtn></Link>
+                </Form> 
+                </div>
             </BtnBox>
-        </div>
+        </Div>
     );
 }
 
