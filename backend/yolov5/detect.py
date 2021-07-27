@@ -12,6 +12,7 @@ import sys
 import time
 from pathlib import Path
 
+import os
 import cv2
 import torch
 import torch.backends.cudnn as cudnn
@@ -62,7 +63,7 @@ class Detect_class(object):
             visualize=False,  # visualize features
             update=False,  # update all models
             project='./output_video/',  # save results to project/name
-            name='',  # save results to project/name
+            name='output',  # save results to project/name
             exist_ok=False,  # existing project/name ok, do not increment
             line_thickness=3,  # bounding box thickness (pixels)
             hide_labels=False,  # hide labels
@@ -72,16 +73,14 @@ class Detect_class(object):
         source = self.get_source()
         save_img = not nosave and not source.endswith('.txt')  # save inference images
         webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
-
+        
         # check source's fps
         video_fps = self.get_fps(source)
-        #print('\ninput_video_fps: ', video_fps, '\n')
-
 
         # Directories
-		#save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
-		#(save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
-        save_dir = project
+        save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
+        (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+        #save_dir = project
         print('\n save_dir ', save_dir, '\n')
 
         # Initialize
@@ -165,10 +164,8 @@ class Detect_class(object):
                     p, s, im0, frame = path, '', im0s.copy(), getattr(dataset, 'frame', 0)
 
                 p = Path(p)  # to Path
-                save_path = str(increment_path(Path(save_dir) / p.name))
-                txt_path = str(increment_path(Path(save_dir) / "labels" / p.stem)) 
-                #save_path = str(save_dir / p.name)  # img.jpg
-                #txt_path = str(save_dir / "labels" / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
+                save_path = str(save_dir / p.name)  # img.jpg
+                txt_path = str(save_dir / "labels" / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
 
                 s += '%gx%g ' % img.shape[2:]  # print string
                 gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
@@ -234,9 +231,9 @@ class Detect_class(object):
                                 save_path += '.mp4'
                             vid_writer[i] = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                         vid_writer[i].write(im0)
-        for name in db:
-            if tmp[name][1]-tmp[name][0]>th:
-                db[name].append([round(tmp[name][0]/video_fps),round(tmp[name][1]/video_fps)])
+        for name in db: 
+                if tmp[name][1]-tmp[name][0]>th:
+                    db[name].append([round(tmp[name][0]/video_fps),round(tmp[name][1]/video_fps)])
 
         if save_txt or save_img:
             s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
@@ -246,8 +243,11 @@ class Detect_class(object):
             strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
     
         print(f'Done. ({time.time() - t0:.3f}s)')
-    
         print(db)
+        
+        # move file & remove 'output' folder
+        os.rename(save_path, str(increment_path(Path(project) / p.name))) 
+        os.rmdir(save_dir)
         return db
 
     def parse_opt(self):
