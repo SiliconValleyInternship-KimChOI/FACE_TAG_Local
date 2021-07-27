@@ -12,7 +12,7 @@ import sys
 import time
 from pathlib import Path
 
-import os
+#import os
 import cv2
 import torch
 import torch.backends.cudnn as cudnn
