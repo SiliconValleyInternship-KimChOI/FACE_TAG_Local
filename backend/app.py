@@ -84,7 +84,11 @@ def post_video():
 
         # 등장인물 타임라인 DB 저장
 		global timeline
-		data = str(video.get())
+		data = str(vi
+
+# Turn off buffering
+ENV PYTHONUNBUFFERED 1
+deo.get())
 		timeline = eval(data)
 		#print(timeline)
 		insertTimeline(timeline)
@@ -104,7 +108,11 @@ def post_video():
             })
 	    # 영상 url
 		url = "https://"+ BUCKET_NAME +".s3.ap-northeast-2.amazonaws.com/" + filename
-		#timeline 출력
+		#timeline 
+
+# Turn off buffering
+ENV PYTHONUNBUFFERED 1
+출력
 		cursor = db.cursor()
 		sql = '''
 		SELECT name,img,start,end from characters 
@@ -114,7 +122,7 @@ def post_video():
 		result = cursor.fetchall()
 
 		# os.remove(app.config['UPLOAD_FOLDER']+filename)
-		shutil.rmtree(video_path+'output')
+		#shutil.rmtree(video_path+'output')
 		return jsonify({'url': url, 'timeline' : result})
 
 #서버 실행
