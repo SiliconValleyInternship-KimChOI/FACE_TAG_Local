@@ -90,7 +90,7 @@ def post_video():
 		insertTimeline(timeline)
 
         # 영상 소리 처리
-		videoclip=VideoFileClip('./output_video/output/'+filename)
+		videoclip=VideoFileClip('./output_video/'+filename)
 		videoclip.audio=audioclip
 		videoclip.write_videofile(video_path+filename) 
 		# S3 버킷에 영상 저장
