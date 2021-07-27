@@ -80,8 +80,7 @@ class Detect_class(object):
         # Directories
         save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
         (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
-        #save_dir = project
-        print('\n save_dir ', save_dir, '\n')
+        
 
         # Initialize
         set_logging()
@@ -244,7 +243,11 @@ class Detect_class(object):
     
         print(f'Done. ({time.time() - t0:.3f}s)')
         print(db)
-        
+      
+        # file for metadata 
+        metadata = open('./list/timeline.txt', 'a') # append mode
+        metadata.write(str(db))
+       
         # move file & remove 'output' folder
         os.rename(save_path, str(increment_path(Path(project) / p.name))) 
         os.rmdir(save_dir)

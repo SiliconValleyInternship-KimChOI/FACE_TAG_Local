@@ -1,8 +1,18 @@
+import React , {useState} from 'react';
 import styled from 'styled-components';
+import ReactPlayer from 'react-player';
 
-const Box = styled.div`
-width:100%;
+const VideoBox = styled.div`
+margin-left:10%;
+width:40%;
 height:100%;
+float: left;
+`
+const TimeBox = styled.div`
+margin-left:10%;
+width: 40%;
+height:100%;
+float: left;
 `
 const Img = styled.img`
 width: 100px;
@@ -15,18 +25,18 @@ margin-left:5%;
 text-algin: center;
 font-family: 'Do Hyeon';
 `
-const Time = styled.div`
-margin-left:5%;
+const Time = styled.button`
+border: 0px;
 text-algin: center;
 font-family: 'Do Hyeon';
 `
-const Timeline = (props) => {
+const VideoTimeline = (props) => {
     const data = props.data;
     const data_length = props.data.length;
     const characters = new Array();
     let temp = -1;
     for (let i=0; i<data_length; i++){
-        if (i != 0 && data[i][0] == data[i-1][0]){
+        if (i !== 0 && data[i][0] === data[i-1][0]){
             characters[temp][2].push([data[i][2],data[i][3]]);
         }
         else{
@@ -38,28 +48,47 @@ const Timeline = (props) => {
         characters[temp][2].push([data[i][2],data[i][3]]);        
         }
     }
-    console.log(characters);
+    const uploadedurl = props.url;
+    const [timeState,setTimeState] = useState(0.0);
 
+
+
+    const convertHMS = (value) => {
+        const sec = parseInt(value, 10); // convert value to number if it's string
+        let hours   = Math.floor(sec / 3600); // get hours
+        let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+        let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+        // add 0 if value < 10; Example: 2 => 02
+        if (hours   < 10) {hours   = "0"+hours;}
+        if (minutes < 10) {minutes = "0"+minutes;}
+        if (seconds < 10) {seconds = "0"+seconds;}
+        return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+    }
 
     return(
     <div>
+    <VideoBox>    
+    <ReactPlayer url={uploadedurl} height='50%' width='100%' controls={true} ref={p => {setTimeState(p);}}/>  
+    </VideoBox>   
      {characters.map(row => {
         return(
-            <Box>
+            <TimeBox>
             <tr key={row}>
                 <td key={row[1]}><Img src={row[1]}/></td>
-                <Name>{row[0]}<br/><br/></Name>
+                <Name key={row[0]}>{row[0]}<br/><br/></Name>
                 {row[2].map(time => {
                     return(
-                        <Time>{time[0]}-{time[1]}<br/></Time>)})}
+                        <td key={row[2]}>
+                        <Time onClick={() => timeState.seekTo(parseFloat(time[0]))}>{convertHMS(time[0])}</Time>
+                        -<Time onClick={() => timeState.seekTo(parseFloat(time[1]))}>{convertHMS(time[1])}</Time>
+                        <br/></td>)})}
             </tr>
-            </Box>
+            </TimeBox>
         );})}
     </div>
     );
 }
-
-export default Timeline;
+export default VideoTimeline;
 
 
 {/* <td key={row[0]}>{row[0]}
