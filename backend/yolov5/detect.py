@@ -244,7 +244,11 @@ class Detect_class(object):
     
         print(f'Done. ({time.time() - t0:.3f}s)')
         print(db)
-
+      
+        # file for metadata 
+        metadata = open('./list/timeline.txt', 'a') # append mode
+        metadata.write(str(db))
+       
         # move file & remove 'output' folder
         #os.rename(save_path, str(increment_path(Path(project) / p.name))) 
         #os.rmdir(save_dir)
