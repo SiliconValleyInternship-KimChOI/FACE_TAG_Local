@@ -12,7 +12,6 @@ import sys
 import time
 from pathlib import Path
 
-#import os
 import cv2
 import torch
 import torch.backends.cudnn as cudnn
@@ -249,9 +248,6 @@ class Detect_class(object):
         metadata = open('./list/timeline.txt', 'a') # append mode
         metadata.write(str(db))
        
-        # move file & remove 'output' folder
-        #os.rename(save_path, str(increment_path(Path(project) / p.name))) 
-        #os.rmdir(save_dir)
         return db
 
     def parse_opt(self):
