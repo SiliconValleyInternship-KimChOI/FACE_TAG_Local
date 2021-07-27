@@ -11,10 +11,10 @@ import Loading from './Loading';
 const VideoBox = styled.div`
 border: 3px solid #DCDCDC;
 background: white;
-padding:2%;
+padding:3%;
 float: left;
 @media only screen and (min-width: 1300px) {
-    width:850px;
+    width:800px;
     height:500px;
     margin:50px 15px 40px 0;
 }
@@ -26,9 +26,9 @@ float: left;
 const BtnBox = styled.div`
 border: 3px solid #DCDCDC;
 background: white;
-padding:2%;
+padding:3%;
 float: left;
-width:400px;
+width:325px;
 @media only screen and (min-width: 1300px) {
     height:500px;
     margin:50px 0 40px 15px;
@@ -58,7 +58,6 @@ const SelectBtn = styled.button`
     border-radius: 15px;
     text-align: center;
     text-decoration-line: none;
-    font-family: 'NanumSquare', sans-serif;
     &:hover{
         background: var(--button-hover-bg-color, #404040);
     }
@@ -73,7 +72,6 @@ const UploadBtn = styled.button`
     border: 3px solid #DCDCDC;
     border-radius: 15px;
     text-align: center;
-    font-family: 'NanumSquare', sans-serif;
     &:hover{
         background: var(--button-hover-bg-color, #404040);
     }
@@ -110,7 +108,7 @@ const VideoUpload = () => {
         <Div>
             <VideoBox>
                 <div className="title">Video</div>
-                <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
+                <ReactPlayer className="player" height='90%' width='100%' url={uploadedurl} controls={controlState}></ReactPlayer>
                 {loading ? <Loading/> : <p></p>}
             </VideoBox>
             <BtnBox>
