@@ -3,75 +3,62 @@ import styled from 'styled-components';
 import '../css/index.css';
 import axios from 'axios';
 import Logo from '../css/logo.png';
-import Banner from '../css/banner_1.png'
+import Banner from '../css/banner.png'
 import {Link} from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import Timeline from '../component/Timeline';
 import Loading from '../component/Loading';
 
 const Header = styled.div`
-  height:80px;
-  position: fixed; top:0;left:0;right:0;
-  text-align:center;
-  background:white;
-  padding:5px 0 0 0;
-  border-bottom: 3px solid #DCDCDC;
+width:100%;
+height:10%;
 `
 const Body = styled.div`
-  background-color: #F5F5F5;
+width: 100%;
+height: 100%;
+background-color: #F5F5F5;
+`
+const Box = styled.div`
+width:100%;
+height:100%;
+margin:0%;
+display:flex;
+align-items:center;
+justify-content:center;
 `
 const VideoBox = styled.div`
-border: 3px solid #DCDCDC;
-background: white;
-padding:3%;
+margin-left:10%;
+width:40%;
+height:100%;
 float: left;
-@media only screen and (min-width: 1300px) {
-    width:800px;
-    height:500px;
-    margin:50px 15px 40px 0;
-}
-@media only screen and (max-width: 1300px) {   
-    width: 95%;
-    margin:30px 0 0 0;
-}
 `
 const TimeBox = styled.div`
-border: 3px solid #DCDCDC;
-background: white;
-padding:3%;
+margin-left:10%;
+width: 40%;
+height:100%;
 float: left;
-width:325px;
-@media only screen and (min-width: 1300px) {
-    height:500px;
-    margin:50px 0 40px 15px;
-}
-@media only screen and (max-width: 1300px) {
-    margin:30px 0 40px 0;
-}
 `
-const Div = styled.div`
-display:flex;    
-justify-content: center;
-align-items: center;
-@media only screen and (max-width: 1300px) {
-    flex-direction: column;
-    width:100%;
-}
-`
+const Text = styled.p`
+color: black;
+padding: 3%;
+font-size:2em;
+text-algin: center;
+font-family: 'Do Hyeon';
+display:flex;
+align-items:center;
+justify-content:center;
+  `
 const Img = styled.img`
-  padding-top:5px;
+width: 17%;
+height: 13%;
+position: absolute;
+margin: 1% 40%
 `
 const Img2 = styled.img`
-  width: 100%;
-  margin: 85px 0% 3% 0%
+width: 100%;
+height: 20%;
+margin: 9% 0% 3% 0%
 `
-
-const Timediv = styled.p`
-height:90%;
-overflow: auto;
-`
-
-
 const Result= (props) => {
   const filename = props.location.aboutProps;
   const [loading,setLoading] = useState(true);
@@ -91,35 +78,24 @@ const Result= (props) => {
       console.log(error);
       setLoading(true);
     });},[]);
-
     return(
         <div>
           <Header>
-          <Link to = '/'><Img src={Logo} height="80%"/></Link>
-          </Header>
+          <Link to = '/'><Img src={Logo} width="30%" height="30%"/></Link>
           <Img2 src={Banner}/>
+          </Header>
 
           <Body>
-          
-          {loading ? 
-              <div className="loadingbox">
-                <Loading/> 
-                <br></br>
-                processing...
-              </div>         
-                : 
-              <Div>
-                <VideoBox>
-                  <div className="title">Tagged Video</div>
-                  <ReactPlayer url={uploadedurl} height='90%' width='100%' controls={controlState}/>
-                  </VideoBox>
-                <TimeBox>
-                  <div className="title">Video</div>
-                  <Timediv><Timeline data={data}/></Timediv>
-                </TimeBox>
-              </Div>
-            } 
-            
+          {loading ? <Text>동영상 인물 태깅 중...</Text> : <Text>동영상 인물 태깅 완료!</Text>}
+            <Box>
+            {loading ? <Loading/> : 
+            <div>
+              <VideoBox>
+                <ReactPlayer url={uploadedurl} height='50%' width='100%' controls={controlState}/>
+                </VideoBox>
+              <TimeBox><Timeline data={data}/></TimeBox>
+             </div>}
+            </Box>  
           </Body>         
         </div>
     )

@@ -2,7 +2,7 @@ import react from 'react';
 import styled from 'styled-components';
 import '../css/index.css';
 import Logo from '../css/logo.png';
-import Banner from '../css/banner_1.png'
+import Banner from '../css/banner.png'
 import {Link} from 'react-router-dom';
 import VideoUpload from '../component/VideoUpload';
 
@@ -23,14 +23,18 @@ const Body = styled.div`
   background-color: #F5F5F5;
 `
 const VideoBox = styled.div`
- 
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 `
 const Img = styled.img`
   padding-top:5px;
 `
 const Img2 = styled.img`
   width: 100%;
-  margin: 85px 0% 3% 0%
+  margin: 80px 0% 3% 0%
 `
 
 const Main = () => {
