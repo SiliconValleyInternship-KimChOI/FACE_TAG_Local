@@ -94,13 +94,12 @@ class Detect_class(object):
 
         # Directories
         save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
-   
         #print('\n save_dir ', save_dir, '\n')
-
         (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
     
         #print('\n save_dir ', save_dir, '\n')
     
+
         # Initialize
         set_logging()
         device = select_device(device)
@@ -136,7 +135,6 @@ class Detect_class(object):
             model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))  # run once
         t0 = time.time()
     
-
         # db: Store continuous appearance intervals for each character
         # tmp: store one continuous appearance interval temporarily
         tmp={
@@ -192,7 +190,6 @@ class Detect_class(object):
                 #print('\nsave_to_s3: ', append_path, '\n')
                 #print('save_path: ', save_path)
                 #print('txt_path: ', txt_path, '\n')
-
                 s += '%gx%g ' % img.shape[2:]  # print string
                 gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
                 imc = im0.copy() if save_crop else im0  # for save_crop
@@ -268,16 +265,10 @@ class Detect_class(object):
         if update:
             strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
     
-        # video to s3 bucket 
-        #s3.upload_file(save_path, bucket_name, save_to_s3)
-    
-        #metadata.close()
         print(f'Done. ({time.time() - t0:.3f}s)')
-    
         # file for metadata 
         metadata = open('./list/timeline.txt', 'a') # append mode
         metadata.write(str(db))
-
         print(db)
         return db
 

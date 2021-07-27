@@ -13,9 +13,10 @@ border: 3px solid #DCDCDC;
 background: white;
 padding:3%;
 float: left;
+height:480px;
+
 @media only screen and (min-width: 1300px) {
     width:800px;
-    height:480px;
     margin:50px 15px 40px 0;
 }
 @media only screen and (max-width: 1300px) {   
