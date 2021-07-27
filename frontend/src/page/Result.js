@@ -6,7 +6,7 @@ import Logo from '../css/logo.png';
 import Banner from '../css/banner_1.png'
 import {Link} from 'react-router-dom';
 import ReactPlayer from 'react-player';
-import VideoTimeline from '../component/VideoTimeline';
+import Timeline from '../component/Timeline';
 import Loading from '../component/Loading';
 
 const Header = styled.div`
@@ -20,7 +20,44 @@ const Header = styled.div`
 const Body = styled.div`
   background-color: #F5F5F5;
 `
-
+const VideoBox = styled.div`
+border: 3px solid #DCDCDC;
+background: white;
+padding:3%;
+float: left;
+@media only screen and (min-width: 1300px) {
+    width:800px;
+    height:480px;
+    margin:50px 15px 40px 0;
+}
+@media only screen and (max-width: 1300px) {   
+    width: 95%;
+    margin:30px 0 0 0;
+}
+`
+const TimeBox = styled.div`
+border: 3px solid #DCDCDC;
+background: white;
+padding:3%;
+float: left;
+width:325px;
+@media only screen and (min-width: 1300px) {
+    height:480px;
+    margin:50px 0 40px 15px;
+}
+@media only screen and (max-width: 1300px) {
+    margin:30px 0 40px 0;
+}
+`
+const Div = styled.div`
+display:flex;    
+justify-content: center;
+align-items: center;
+@media only screen and (max-width: 1300px) {
+    flex-direction: column;
+    width:100%;
+}
+`
 const Img = styled.img`
   padding-top:5px;
 `
@@ -29,6 +66,10 @@ const Img2 = styled.img`
   margin: 85px 0% 3% 0%
 `
 
+const Timediv = styled.p`
+height:90%;
+overflow: auto;
+`
 
 
 const Result= (props) => {
@@ -66,8 +107,17 @@ const Result= (props) => {
                 <br></br>
                 processing...
               </div>         
-                :  
-              <VideoTimeline data={data} url={uploadedurl}/>  
+                : 
+              <Div>
+                <VideoBox>
+                  <div className="title">Tagged Video</div>
+                  <ReactPlayer url={uploadedurl} height='90%' width='100%' controls={controlState}/>
+                  </VideoBox>
+                <TimeBox>
+                  <div className="title">Video</div>
+                  <Timediv><Timeline data={data}/></Timediv>
+                </TimeBox>
+              </Div>
             } 
             
           </Body>         

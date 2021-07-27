@@ -1,4 +1,3 @@
-  
 from flask import Flask, render_template, request, jsonify, redirect, url_for, abort
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
@@ -8,6 +7,8 @@ from tasks import celery, processing
 import pymysql
 import pandas as pd
 import os
+# Convert sec_to_time
+from time import strftime, gmtime
 # Sound synthesis
 from moviepy.editor import *
 # connection.py
@@ -36,7 +37,6 @@ def get_video():
 	if request.method == 'POST':
 		video_file = request.files['file']
 		# 파일 안정성 확인
-		global filename
 		filename = secure_filename(video_file.filename)
 		# video 폴더에 저장
 		video_file.save(os.path.join('./input_video', filename))
@@ -59,8 +59,8 @@ def insertTimeline(timeline):
 		timeline_value = timeline[i]
 		val = []
 		for j in timeline_value:
-			start = j[0]
-			end = j[1]
+			start = strftime("%H:%M:%S", gmtime(j[0]))
+			end = strftime("%H:%M:%S", gmtime(j[1]))
 			val.append((cid,start,end))
 		print(val)
 		cursor = db.cursor()
@@ -75,8 +75,8 @@ def insertTimeline(timeline):
 def post_video():
 	if request.method == 'POST':
 		#파일 이름 가져오기
-		# file_list = os.listdir(app.config['UPLOAD_FOLDER'])
-		# filename = "".join(file_list)
+		file_list = os.listdir(app.config['UPLOAD_FOLDER'])
+		filename = "".join(file_list)
 		# 영상 처리
 		audioclip=VideoFileClip('./input_video/'+filename).audio #오디오 받기
 		video = processing.delay(app.config['UPLOAD_FOLDER']+filename) #영상 처리
@@ -95,13 +95,7 @@ def post_video():
 		videoclip.write_videofile(video_path+filename) 
 		# S3 버킷에 영상 저장
 		s3 = s3_connection()
-		s3.upload_file(
-            video_path+filename,
-            BUCKET_NAME,
-            filename,
-            ExtraArgs={
-            "ContentType": 'video/mp4'
-            })
+		s3.upload_file(video_path+filename, BUCKET_NAME, filename)
 	    # 영상 url
 		url = "https://"+ BUCKET_NAME +".s3.ap-northeast-2.amazonaws.com/" + filename
 		#timeline 출력
@@ -114,7 +108,7 @@ def post_video():
 		result = cursor.fetchall()
 
 		# os.remove(app.config['UPLOAD_FOLDER']+filename)
-		shutil.rmtree(video_path+'output')
+		# shutil.rmtree(video_path+'output')
 		return jsonify({'url': url, 'timeline' : result})
 
 #서버 실행
