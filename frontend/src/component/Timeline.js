@@ -1,24 +1,31 @@
 import styled from 'styled-components';
 
 const Box = styled.div`
-width:100%;
-height:100%;
+width:90%;
+height:90%;
+margin:5% 0 5% 0;
+padding:5%;
 `
+
+const Profile=styled.div`
+    display:flex;    
+    justify-content: center;
+    align-items: center;
+`
+
 const Img = styled.img`
-width: 100px;
-height: 100px;
+width:70px;
+height: 70px;
 border-radius: 50%;
+margin-right: 10px;
 `
 const Name = styled.div`
 float:left;
-margin-left:5%;
-text-algin: center;
-font-family: 'Do Hyeon';
+font-size: 16px;
+font-weight: 700;
+weight: 100%;
 `
 const Time = styled.div`
-margin-left:5%;
-text-algin: center;
-font-family: 'Do Hyeon';
 `
 const Timeline = (props) => {
     const data = props.data;
@@ -47,11 +54,17 @@ const Timeline = (props) => {
         return(
             <Box>
             <tr key={row}>
-                <td key={row[1]}><Img src={row[1]}/></td>
-                <Name>{row[0]}<br/><br/></Name>
-                {row[2].map(time => {
-                    return(
-                        <Time>{time[0]}-{time[1]}<br/></Time>)})}
+                <td key={row[1]}>
+                    <Profile>
+                        <Img src={row[1]}/>
+                        <Name>{row[0]}</Name>
+                    </Profile>   
+                </td>      
+            </tr>
+            <tr>
+                <td colsplan="2"><br/>{row[2].map(time => {
+                    return(  
+                        <Time>{time[0]}-{time[1]}<br/></Time>)})}</td>
             </tr>
             </Box>
         );})}

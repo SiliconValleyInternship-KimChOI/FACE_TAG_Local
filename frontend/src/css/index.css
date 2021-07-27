@@ -1,10 +1,15 @@
 @import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
 
+*{
+    font-family: 'NanumSquare', sans-serif;
+}
+
 .title{
     font-weight: 700;
-    font-size: 25px;
-    color: #3E3E3E;
+    font-size: 24px;
+    color: #525252;
     text-align: left;
+    margin-bottom: 20px;
 }
 .button{
     display:flex;    
@@ -14,4 +19,13 @@
     height:80%;
     margin:10%;
     text-align:center;
+}
+
+.loadingbox{
+    margin:2.5% 0 0 0;
+    height:500px;
+    display:flex;    
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
