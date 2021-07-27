@@ -27,7 +27,7 @@ padding:3%;
 float: left;
 @media only screen and (min-width: 1300px) {
     width:800px;
-    height:500px;
+    height:480px;
     margin:50px 15px 40px 0;
 }
 @media only screen and (max-width: 1300px) {   
@@ -42,7 +42,7 @@ padding:3%;
 float: left;
 width:325px;
 @media only screen and (min-width: 1300px) {
-    height:500px;
+    height:480px;
     margin:50px 0 40px 15px;
 }
 @media only screen and (max-width: 1300px) {
