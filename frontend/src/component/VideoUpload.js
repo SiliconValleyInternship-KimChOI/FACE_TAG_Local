@@ -11,11 +11,12 @@ import Loading from './Loading';
 const VideoBox = styled.div`
 border: 3px solid #DCDCDC;
 background: white;
-padding:2%;
+padding:3%;
 float: left;
+height:480px;
+
 @media only screen and (min-width: 1300px) {
-    width:850px;
-    height:500px;
+    width:800px;
     margin:50px 15px 40px 0;
 }
 @media only screen and (max-width: 1300px) {   
@@ -26,11 +27,11 @@ float: left;
 const BtnBox = styled.div`
 border: 3px solid #DCDCDC;
 background: white;
-padding:2%;
+padding:3%;
 float: left;
-width:400px;
+width:325px;
 @media only screen and (min-width: 1300px) {
-    height:500px;
+    height:480px;
     margin:50px 0 40px 15px;
 }
 @media only screen and (max-width: 1300px) {
@@ -50,30 +51,31 @@ align-items: center;
 const SelectBtn = styled.button`
     width: 300px;
     height: 60px;
-    color: white;
+    color: gray;
     font-size: 1em;
+    font-weight:700;
     margin: 0 0 15px 0;
-    background-color: #DCDCDC;
-    border: 3px solid #DCDCDC;
+    background: white;
+    border: 3px solid lightgray;
     border-radius: 15px;
     text-align: center;
     text-decoration-line: none;
-    font-family: 'NanumSquare', sans-serif;
     &:hover{
+        color:white;
         background: var(--button-hover-bg-color, #404040);
     }
 `
 const UploadBtn = styled.button`
     width: 300px;
     height: 60px;
-    color: #C3C3C3;
+    color: white;
     font-size: 1em;
+    font-weight:700;
     margin: 0 0 15px 0;
-    background-color: white;
-    border: 3px solid #DCDCDC;
+    background-color: #D0D0D0;
+    border: 3px solid #D0D0D0;
     border-radius: 15px;
     text-align: center;
-    font-family: 'NanumSquare', sans-serif;
     &:hover{
         background: var(--button-hover-bg-color, #404040);
     }
@@ -110,7 +112,7 @@ const VideoUpload = () => {
         <Div>
             <VideoBox>
                 <div className="title">Video</div>
-                <ReactPlayer url={uploadedurl} controls={controlState}></ReactPlayer>
+                <ReactPlayer className="player" height='90%' width='100%' url={uploadedurl} controls={controlState}></ReactPlayer>
                 {loading ? <Loading/> : <p></p>}
             </VideoBox>
             <BtnBox>
