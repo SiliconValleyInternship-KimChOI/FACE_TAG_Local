@@ -90,7 +90,7 @@ def post_video():
 		insertTimeline(timeline)
 
         # 영상 소리 처리
-		videoclip=VideoFileClip('./output_video/output/'+filename)
+		videoclip=VideoFileClip('./output_video/'+filename)
 		videoclip.audio=audioclip
 		videoclip.write_videofile(video_path+filename) 
 		# S3 버킷에 영상 저장
@@ -104,7 +104,7 @@ def post_video():
             })
 	    # 영상 url
 		url = "https://"+ BUCKET_NAME +".s3.ap-northeast-2.amazonaws.com/" + filename
-		#timeline 출력
+		#timeline 
 		cursor = db.cursor()
 		sql = '''
 		SELECT name,img,start,end from characters 
@@ -114,7 +114,7 @@ def post_video():
 		result = cursor.fetchall()
 
 		# os.remove(app.config['UPLOAD_FOLDER']+filename)
-		shutil.rmtree(video_path+'output')
+		#shutil.rmtree(video_path+'output')
 		return jsonify({'url': url, 'timeline' : result})
 
 #서버 실행
