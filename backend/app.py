@@ -84,11 +84,7 @@ def post_video():
 
         # 등장인물 타임라인 DB 저장
 		global timeline
-		data = str(vi
-
-# Turn off buffering
-ENV PYTHONUNBUFFERED 1
-deo.get())
+		data = str(video.get())
 		timeline = eval(data)
 		#print(timeline)
 		insertTimeline(timeline)
@@ -109,10 +105,6 @@ deo.get())
 	    # 영상 url
 		url = "https://"+ BUCKET_NAME +".s3.ap-northeast-2.amazonaws.com/" + filename
 		#timeline 
-
-# Turn off buffering
-ENV PYTHONUNBUFFERED 1
-출력
 		cursor = db.cursor()
 		sql = '''
 		SELECT name,img,start,end from characters 
