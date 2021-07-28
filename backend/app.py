@@ -1,4 +1,3 @@
-  
 from flask import Flask, render_template, request, jsonify, redirect, url_for, abort
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
@@ -86,17 +85,17 @@ def post_video():
 		global timeline
 		data = str(video.get())
 		timeline = eval(data)
-		#print(timeline)
 		insertTimeline(timeline)
 
         # 영상 소리 처리
-		videoclip=VideoFileClip('./output_video/'+filename)
+		videoclip=VideoFileClip(video_path+filename)
 		videoclip.audio=audioclip
-		videoclip.write_videofile(video_path+filename) 
+		videoclip.write_videofile(video_path+"result/"+filename)
+
 		# S3 버킷에 영상 저장
 		s3 = s3_connection()
 		s3.upload_file(
-            video_path+filename,
+            video_path+"result/"+filename,
             BUCKET_NAME,
             filename,
             ExtraArgs={
@@ -112,9 +111,6 @@ def post_video():
 		ORDER BY name, start;'''
 		cursor.execute(sql)
 		result = cursor.fetchall()
-
-		# os.remove(app.config['UPLOAD_FOLDER']+filename)
-		#shutil.rmtree(video_path+'output')
 		return jsonify({'url': url, 'timeline' : result})
 
 #서버 실행
