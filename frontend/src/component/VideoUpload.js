@@ -112,7 +112,22 @@ const VideoUpload = () => {
         <Div>
             <VideoBox>
                 <div className="title">Video</div>
-                <ReactPlayer className="player" height='90%' width='100%' url={uploadedurl} controls={controlState}></ReactPlayer>
+                <Dropzone
+                accept='video/*'
+                onDrop={onDrop}
+                multiple={false}    // 한번에 파일을 2개 이상 올릴건지
+                maxSize={100000000}    // 최대 사이즈 
+                noClick="true"
+                > 
+                    {({getRootProps, getInputProps}) => (
+                        <section className="zone">
+                        <div {...getRootProps()} className="zone">
+                            <input {...getInputProps()} />
+                            <ReactPlayer className="player" height='90%' width='100%' url={uploadedurl} controls={controlState}></ReactPlayer>
+                        </div>
+                        </section>
+                    )}
+                </Dropzone>
                 {loading ? <Loading/> : <p></p>}
             </VideoBox>
             <BtnBox>
