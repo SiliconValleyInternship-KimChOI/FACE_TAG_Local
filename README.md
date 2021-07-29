@@ -1,21 +1,91 @@
-# 가가 가가? / GaGaGaGa
-![image](https://user-images.githubusercontent.com/55133538/124889548-29c8f100-e012-11eb-8c12-573201e1e647.png)
-<br>
-가가 가가? / GaGaGaGa 는 2021 SiliconValley Internship에 참여하게 된 Team D의 프로젝트 이름이다. 
-<br>
-타인종효과와 같이 자신과 다르게 생긴 사람들의 얼굴을 잘 구분하지 못해 안면 인식의 불편함을 겪는 사람들에게 도움을 주기 위해 이 프로젝트를 진행하였다.
-<br>
+# 🏷️#FACE_TAG
 
-## Team D / Kim Ch O I
-Our last name is Kim + Choi + Oh(O) + Lee(I) -> Kim ChOI
+_**#FACE_TAG** is a site that tags the characters in the video and lists the appearance times of the characters._
 
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/ksy990628"><img src="https://i.pinimg.com/564x/94/bd/b6/94bdb6d3444a1fa97eed105c706f6611.jpg" width="100px;" alt=""/><br /><sub><b>Seoyeong Kim (leader)</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
-    <td align="center"><a href="https://github.com/kimminje0ng"><img src="https://i.pinimg.com/564x/94/bd/b6/94bdb6d3444a1fa97eed105c706f6611.jpg" width="100px;" alt=""/><br /><sub><b>Minjeong Kim</b></sub></a><br /><a href="https://github.com/all-contributors/all-contributors/commits?author=jfmengels" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Ajfmengels" title="Reviewed Pull Requests">👀</a> <a href="#tool-jfmengels" title="Tools">🔧</a></td>
-    <td align="center"><a href="https://github.com/ohhondgi"><img src="https://i.pinimg.com/564x/94/bd/b6/94bdb6d3444a1fa97eed105c706f6611.jpg" width="100px;" alt=""/><br /><sub><b>Honggi Oh</b></sub></a><br /><a href="https://github.com/all-contributors/all-contributors/commits?author=jfmengels" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Ajfmengels" title="Reviewed Pull Requests">👀</a> <a href="#tool-jfmengels" title="Tools">🔧</a></td>  
-    <td align="center"><a href="https://github.com/Dongheon.Lee"><img src="https://i.pinimg.com/564x/94/bd/b6/94bdb6d3444a1fa97eed105c706f6611.jpg" width="100px;" alt=""/><br /><sub><b>Dongheon Lee</b></sub></a><br /><a href="https://github.com/all-contributors/all-contributors/commits?author=jfmengels" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Ajfmengels" title="Reviewed Pull Requests">👀</a> <a href="#tool-jfmengels" title="Tools">🔧</a></td>   
-    <td align="center"><a href="https://github.com/ohhondgi"><img src="https://i.pinimg.com/564x/94/bd/b6/94bdb6d3444a1fa97eed105c706f6611.jpg" width="100px;" alt=""/><br /><sub><b>Seungme Lee</b></sub></a><br /><a href="https://github.com/all-contributors/all-contributors/commits?author=jfmengels" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Ajfmengels" title="Reviewed Pull Requests">👀</a> <a href="#tool-jfmengels" title="Tools">🔧</a></td>      
-    <td align="center"><a href="https://github.com/se_yeon"><img src="https://i.pinimg.com/564x/94/bd/b6/94bdb6d3444a1fa97eed105c706f6611.jpg" width="100px;" alt=""/><br /><sub><b>Seyeon Choi</b></sub></a><br /><a href="https://github.com/all-contributors/all-contributors/commits?author=jfmengels" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Ajfmengels" title="Reviewed Pull Requests">👀</a> <a href="#tool-jfmengels" title="Tools">🔧</a></td>       
-  </tr>
-  </table>
+If you register the "Harry Potter" video on the website, you can check the video results of tagging Harry, Ron, and Hermione, the main cast of Harry Potter, and the time the person appeared.
+
+_**#FACE_TAG**는 영상 속 인물들을 태깅하고 인물들의 등장 시간을 리스트로 정리해주는 사이트입니다._
+
+'해리포터' 영상을 등록하면 해리포터의 주요 출연진인 'Harry', 'Ron', 'Hermione'을 태깅한 영상 결과와 해당 사람이 등장한 시간을 확인할 수 있습니다.
+
+[시연 GIF 넣을 예정]
+<br/>
+<br/>
+
+
+## ✏ Features
+    1) Printing Face Tag on Original Video
+    2) Timestamp of Person Appearance
+<br/>
+
+
+## ✏ System Archetecture
+![Untitled](https://user-images.githubusercontent.com/71761610/127014233-ab2ecc27-7d5e-463b-a24e-b9f2fc0d0dcd.png)
+<br/>
+<br/>
+
+
+
+
+## ✏ Tech Stack
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Frontend&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |      Backend      |         etc          |
+| :----------------------: | :---------------: | :------------------: |
+|     ![REACT](https://img.shields.io/badge/REACT-v17.0.2-blue?style=flat&logo=REACT)     |       ![Flask](https://img.shields.io/badge/Flask-v1.0.2-black?style=flat&logo=Flask)   ![Redis](https://img.shields.io/badge/Redis-v3.5.3-red?style=flat&logo=Redis)   ![Celery](https://img.shields.io/badge/Celery-v5.1.2-yellowgreen?style=flat&logo=Celery)   ![Python](https://img.shields.io/badge/Python-v3.7-yellow?style=flat&logo=Python)   ![PyTorch](https://img.shields.io/badge/PyTorch-v1.7.0-red?style=flat&logo=PyTorch)   ![OpenCV](https://img.shields.io/badge/OpenCV-v4.5.3-red?style=flat&logo=OpenCV)   ![YOLO](https://img.shields.io/badge/YOLO-v5-9cf?style=flat&logo=YOLOv5)   ![Gunicorn](https://img.shields.io/badge/Gunicorn-v.20.1.0-brightgreen?style=flat&logo=Gunicorn)     ![MySQL](https://img.shields.io/badge/MySQL-v8.0.26-blue?style=flat&logo=MySQL)     |     ![VScode](https://img.shields.io/badge/VScode-v3.5.3-blue?style=flat&logo=VScode)   ![Git](https://img.shields.io/badge/Git-orange?style=flat&logo=Git)   ![GitHub](https://img.shields.io/badge/GitHub-black?style=flat&logo=GitHub)     |
+
+    - Frontend : React
+    - Backend : Flask / Redis / Celery / Python / Pytorch / OpenCV
+    - Middleware : Gunicorn
+    - AI model : YOLO v5
+    - Database : MySQL
+    - etc : Nginx / VScode / Amazon S3 / Git&GitHub
+<br/>
+
+
+
+## ✏ Initialization
+- clone the Repository
+```
+$ git clone https://github.com/SiliconValleyInternship-KimChOI/Docker.git
+```
+<br/>
+- Install npm packages & Start React
+```
+$ cd frontend
+$ npm i
+$ npm start
+```
+<br/>
+- Start Flask
+```
+$ cd backend
+$ flask run
+```
+<br/>
+- Start Redis
+Download Redis and start redis-server.exe
+<br/>
+- Start Celery
+```
+$ cd backend
+
+Windows
+$ celery -A tasks worker --pool=solo -l info
+Mac
+$ celery -A tasks worker --loglevel=info 
+```
+<br/>
+
+## ✏ Team Members
+Our Team Name : **Kim ChOI** <- Our last name is *Kim + Ch(oi) + O(=Oh) + I(=Lee)*
+
+😎SeoYeong Kim (leader) - https://github.com/ksy990628
+
+🎅MinJeong Kim - https://github.com/kimminje0ng
+
+🧑HongGi Oh - https://github.com/ohhondgi
+
+👨‍💻DongHeon Lee - https://github.com/Dongheon97
+
+🙎‍♀️SeungMi Lee - https://github.com/minewet
+
+👱‍♀️Seyeon Choi - https://github.com/barabobBOB
