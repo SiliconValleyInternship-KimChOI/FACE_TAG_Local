@@ -1,5 +1,5 @@
 # AI development
-written by ==deep learning&video processing== team.
+written by deep learning&video processing team.
 
 - **train_and_test.ipynb**: for model training & testing
 - **test.ipynb**: for model testing only<br>
