@@ -64,8 +64,9 @@ $ flask run
 ```
 <br/>
 
-- Start Redis
-Download Redis and start redis-server.exe
+- Start Redis   <br/>
+Download Redis https://redis.io/download   <br/>
+Start redis-server.exe <br/>
 <br/>
 
 - Start Celery
