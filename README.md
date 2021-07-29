@@ -48,6 +48,7 @@ _**#FACE_TAG**는 영상 속 인물들을 태깅하고 인물들의 등장 시�
 $ git clone https://github.com/SiliconValleyInternship-KimChOI/Docker.git
 ```
 <br/>
+
 - Install npm packages & Start React
 ```
 $ cd frontend
@@ -55,15 +56,18 @@ $ npm i
 $ npm start
 ```
 <br/>
+
 - Start Flask
 ```
 $ cd backend
 $ flask run
 ```
 <br/>
+
 - Start Redis
 Download Redis and start redis-server.exe
 <br/>
+
 - Start Celery
 ```
 $ cd backend
