@@ -3,73 +3,63 @@ import styled from 'styled-components';
 import '../css/index.css';
 import axios from 'axios';
 import Logo from '../css/logo.png';
-import Banner from '../css/banner_1.png'
+import Banner from '../css/banner.png'
 import {Link} from 'react-router-dom';
-import ReactPlayer from 'react-player';
 import VideoTimeline from '../component/VideoTimeline';
 import Loading from '../component/Loading';
 
 const Header = styled.div`
-  height:80px;
-  position: fixed; top:0;left:0;right:0;
-  text-align:center;
-  background:white;
-  padding:5px 0 0 0;
-  border-bottom: 3px solid #DCDCDC;
+height:80px;
+position: fixed; top:0;left:0;right:0;
+text-align:center;
+background:white;
+padding:5px 0 0 0;
+border-bottom: 3px solid #DCDCDC;
 `
 const Body = styled.div`
-  background-color: #F5F5F5;
+background-color: #F5F5F5;
 `
-
 const Img = styled.img`
-  padding-top:5px;
+padding-top:5px;
+
 `
 const Img2 = styled.img`
-  width: 100%;
-  margin: 85px 0% 3% 0%
+width: 100%;
+margin: 85px 0% 3% 0%
 `
-
-
-
 const Result= (props) => {
   const filename = props.location.aboutProps;
   const [loading,setLoading] = useState(true);
   const [data,setData] = useState(null); //db -> name, image, timeline
   const [uploadedurl, setUploadedurl] = useState(null);  //video url
-  const [controlState, setControlState] = useState(false); //video control
 
     useEffect (() => {
       // video
       axios.post('http://localhost:5000/fileDown', filename).then(response=>{
       console.log(response.data);
       setUploadedurl(response.data.url);
-      setControlState(true);
       setData(response.data.timeline);
       setLoading(false);
     }).catch(error=>{
       console.log(error);
       setLoading(true);
     });},[]);
-
     return(
         <div>
           <Header>
           <Link to = '/'><Img src={Logo} height="80%"/></Link>
           </Header>
           <Img2 src={Banner}/>
-
           <Body>
-          
-          {loading ? 
-              <div className="loadingbox">
-                <Loading/> 
-                <br></br>
-                processing...
-              </div>         
-                :  
-              <VideoTimeline data={data} url={uploadedurl}/>  
-            } 
-            
+            {loading ? 
+                <div className="loadingbox">
+                  <Loading/> 
+                  <br></br>
+                  processing...
+                </div>         
+                  :  
+                <VideoTimeline data={data} url={uploadedurl}/>  
+            }
           </Body>         
         </div>
     )

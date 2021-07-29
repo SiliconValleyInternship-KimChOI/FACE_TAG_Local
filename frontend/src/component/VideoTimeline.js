@@ -2,7 +2,6 @@ import React , {useState} from 'react';
 import styled from 'styled-components';
 import ReactPlayer from 'react-player';
 
-
 const Box = styled.div`
 width:90%;
 margin:0 0 5% 0;
@@ -21,13 +20,13 @@ height: 70px;
 border-radius: 50%;
 margin-right: 10px;
 `
+
 const Name = styled.div`
 float:left;
 font-size: 16px;
 font-weight: 700;
 weight: 100%;
 `
-
 const VideoBox = styled.div`
 border: 3px solid #DCDCDC;
 background: white;
@@ -39,9 +38,13 @@ height:480px;
     margin:50px 15px 40px 0;
 }
 @media only screen and (max-width: 1300px) {   
-    width: 95%;
-    margin:30px 0 0 0;
+    width: 90%;
 }
+@media only screen and (max-width: 600px) {   
+    width: 90%;
+    height: 300px
+}
+
 `
 const TimeBox = styled.div`
 border: 3px solid #DCDCDC;
@@ -54,6 +57,11 @@ width:325px;
     margin:50px 0 40px 15px;
 }
 @media only screen and (max-width: 1300px) {
+    width:70%;
+    margin:30px 0 40px 0;
+}
+@media only screen and (max-width: 500px) {
+    width:90%;
     margin:30px 0 40px 0;
 }
 `
@@ -61,6 +69,9 @@ const Timediv = styled.div`
 width:100%;
 height:90%;
 overflow: auto;
+@media only screen and (max-width: 500px) {
+    height:80%;
+}
 `
 
 const Div = styled.div`
@@ -71,7 +82,7 @@ align-items: center;
     flex-direction: column;
     width:100%;
 }
-`
+`   
 
 const Time = styled.button`
 background:white;
@@ -80,6 +91,16 @@ color:#58392A;
 cursor:pointer;
 font-size: 14px;
 `
+
+const DownloadedVideo = styled(ReactPlayer)`
+width: 100% !important;
+height: 90% !important;
+@media only screen and (max-width: 500px) {
+    margin-top: -5%;
+}
+`
+
+
 const VideoTimeline = (props) => {
     const data = props.data;
     const data_length = props.data.length;
@@ -116,10 +137,10 @@ const VideoTimeline = (props) => {
     }
 
     return(
-    <Div>
+        <Div>
         <VideoBox>
             <div className="title">Tagged Video</div>
-            <ReactPlayer url={uploadedurl} height='90%' width='100%' controls={true} ref={p => {setTimeState(p);}}/>
+            <DownloadedVideo url={uploadedurl} controls={true} ref={p => {setTimeState(p);}}/>
         </VideoBox>
 
         <TimeBox>
@@ -145,7 +166,7 @@ const VideoTimeline = (props) => {
                                     </div>
                                 )})}
                             </td>
-                                              
+
                         </tr>
                         </Box>
                     );})}

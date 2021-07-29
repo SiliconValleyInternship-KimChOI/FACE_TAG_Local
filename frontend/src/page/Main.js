@@ -1,15 +1,12 @@
-import react from 'react';  
-import styled from 'styled-components';
+import React from 'react';
+import styled from "styled-components";
 import '../css/index.css';
 import Logo from '../css/logo.png';
-import Banner from '../css/banner_1.png'
-import {Link} from 'react-router-dom';
+import Banner from '../css/banner.png'
+import {Link} from "react-router-dom";
 import VideoUpload from '../component/VideoUpload';
 
-// #수직정렬
-// display:flex;
-// align-items:center;
-// justify-content:center;
+/* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> */
 
 const Header = styled.div`
   height:80px;
@@ -21,9 +18,6 @@ const Header = styled.div`
 `
 const Body = styled.div`
   background-color: #F5F5F5;
-`
-const VideoBox = styled.div`
- 
 `
 const Img = styled.img`
   padding-top:5px;
@@ -37,15 +31,15 @@ const Main = () => {
     return(
         <div>
           <Header>
-          <Link to = '/'><Img src={Logo} height="80%" /></Link>
+          <Link to = '/'><Img src={Logo} height="80%"/></Link>
           </Header>
           <Img2 src={Banner}/>
-          
           <Body>
-          <VideoBox><VideoUpload></VideoUpload></VideoBox>
+          <VideoUpload></VideoUpload>
           </Body>
         </div>
     )
 }
 
 export default Main;
+
