@@ -1,9 +1,9 @@
 # AI development
 written by deep learning&video processing team.
 
-🎅MinJeong Kim - https://github.com/kimminje0ng
-👨‍💻DongHeon Lee - https://github.com/Dongheon97
-🙎‍♀️SeungMi Lee - https://github.com/minewet
+🎅MinJeong Kim - https://github.com/kimminje0ng<br>
+👨‍💻DongHeon Lee - https://github.com/Dongheon97<br>
+🙎‍♀️SeungMi Lee - https://github.com/minewet<br>
 
 - **train_and_test.ipynb**: for model training & testing
 - **test.ipynb**: for model testing only<br>
