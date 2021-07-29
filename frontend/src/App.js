@@ -1,14 +1,13 @@
-import React from 'react';
-import './css/App.css'
-import Main from './page/Main'
-import Result from './page/Result'
-import {Route} from "react-router-dom"
+import './App.css';
+import Main from './page/Main';
+import Result from './page/Result';
+import {Route} from "react-router-dom";
 
 function App() {
   return (
     <div>
-      <Route path="/" component={Main} exact/>
-      <Route path="/result" component={Result} />
+      <Route path='/' component={Main} exact/>
+      <Route path='/result' component={Result} />
     </div>
   );
 }
