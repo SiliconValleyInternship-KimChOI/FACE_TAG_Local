@@ -3,7 +3,7 @@ import boto3
 ...
 AWS_ACCESS_KEY = "---"
 AWS_SECRET_KEY = "---"
-BUCKET_NAME = "gagagaga"
+BUCKET_NAME = "---"
 ...
 
 def s3_connection():
