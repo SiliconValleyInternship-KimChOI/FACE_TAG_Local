@@ -1,7 +1,7 @@
 import boto3
 
 ...
-AWS_ACCESS_KEY = "---"
+AWS_ACCESS_KEY = "---" #보안상으로 비공개 처리하겠습니다. 21.09.11 관련사항 있으시면 연락주세요.
 AWS_SECRET_KEY = "---"
 BUCKET_NAME = "---"
 ...
