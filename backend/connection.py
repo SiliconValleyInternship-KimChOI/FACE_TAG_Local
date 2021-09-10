@@ -1,8 +1,8 @@
 import boto3
 
 ...
-AWS_ACCESS_KEY = "AKIAVJ6H6FLE5FNMZF4V"
-AWS_SECRET_KEY = "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"
+AWS_ACCESS_KEY = "---"
+AWS_SECRET_KEY = "---"
 BUCKET_NAME = "gagagaga"
 ...
 
